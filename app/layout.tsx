@@ -1,3 +1,6 @@
+import { Header } from "@/components/app_layout/Header";
+import { LeftBar } from "@/components/app_layout/LeftBar";
+import { cn } from "@/utils/cn";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -15,8 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <div lang="en" className="h-screen w-full">
+      <Header />
+      <div className={cn(inter.className, "w-full flex flex-row pt-12")}>
+        <LeftBar />
+        <div className="h-full w-full ml-64">{children}</div>
+      </div>
+    </div>
   );
 }
