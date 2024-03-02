@@ -15,6 +15,8 @@ const config: Config = {
       },
       colors: {
         primary: "#9147ff",
+        primaryWord: "#1f1f23",
+        secondaryWord: "#616a75",
         hoverColor: "#e3e3e6",
         leftBarColor: "#efeff1",
       },
