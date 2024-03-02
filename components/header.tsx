@@ -34,7 +34,7 @@ export const Header = () => {
   const [isLogin, setIsLogin] = useState(false);
 
   return (
-    <nav className="fixed top-0 w-full flex flex-row items-center justify-between font-semibold text-xl text-primaryWord bg-white px-4 py-2 shadow z-[49]">
+    <nav className="fixed top-0 w-full flex flex-row items-center justify-between font-semibold text-xl text-primaryWord bg-white px-4 py-2 shadow z-[49] h-12">
       <div className="flex flex-row gap-10">
         <a href="" className="hover:text-primary">
           Home
