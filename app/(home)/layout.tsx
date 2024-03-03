@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <div lang="en" className="h-screen w-full">
       <Header />
-      <div className="w-full flex flex-row pt-14">
+      <div className="w-full flex flex-row pt-12">
         <LeftBar />
         <div className="h-full w-full ml-64">{children}</div>
       </div>
