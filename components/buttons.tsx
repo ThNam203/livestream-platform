@@ -9,10 +9,12 @@ const IconButton = ({
   className,
   icon,
   disabled = false,
+  onClick,
 }: {
   className?: ClassValue;
   icon: ReactNode;
   disabled?: boolean;
+  onClick?: () => void;
 }) => {
   return (
     <button
@@ -21,9 +23,7 @@ const IconButton = ({
         className
       )}
       disabled={disabled}
-      onClick={() => {
-        console.log("clicked icon button");
-      }}
+      onClick={onClick}
     >
       {icon}
     </button>
@@ -61,7 +61,7 @@ const TagButton = ({
   disabled = false,
 }: {
   className?: ClassValue;
-  content: string;
+  content: ReactNode;
   disabled?: boolean;
 }) => {
   return (

@@ -1,59 +1,77 @@
 "use client";
 import { cn } from "@/utils/cn";
 import { ClassValue } from "clsx";
-import { Eye, Search } from "lucide-react";
+import {
+  ArrowDownWideNarrow,
+  Check,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-const Input = ({
-  id,
-  type = "text",
-  placeholder,
+const Option = ({
   className,
+  icon,
+  content,
+  selectedOption,
+  setSelectedOption,
+  onClick,
 }: {
-  id?: string;
-  type?: string;
-  placeholder?: string;
   className?: ClassValue;
+  icon?: ReactNode;
+  content: string;
+  selectedOption?: string;
+  setSelectedOption: (selectedTab: string) => void;
+  onClick?: () => void;
 }) => {
+  const selectedStyle = "bg-primary text-white";
+  const defaultStyle = "bg-white text-primaryWord hover:bg-hoverColor";
   return (
-    <input
-      id={id}
-      type={type}
-      placeholder={placeholder}
+    <div
       className={cn(
-        "border-0 outline outline-1 outline-black rounded py-1 px-3 focus:outline-4 focus:outline-primary font-normal",
+        "w-full flex flex-row items-center justify-between text-nowrap rounded px-2 py-1 gap-2 cursor-pointer ease-linear duration-100",
+        selectedOption === content ? selectedStyle : defaultStyle,
         className
       )}
-    />
+      onClick={() => {
+        setSelectedOption(content);
+        if (onClick) onClick();
+      }}
+    >
+      {icon}
+      <span className="w-full">{content}</span>
+      <Check
+        className={cn(selectedOption === content ? "opacity-100" : "opacity-0")}
+      />
+    </div>
   );
 };
 
-const SearchInput = ({
+const Combobox = ({
   id,
-  type = "text",
+  selectedOption,
+  className,
   popover,
   popoverPosition = "bottom-center",
-  placeholder,
-  className,
 }: {
   id?: string;
-  type?: string;
+  selectedOption: string;
   popover?: ReactNode;
   popoverPosition?: "bottom-right" | "bottom-left" | "bottom-center";
-  placeholder?: string;
   className?: ClassValue;
 }) => {
   const [showPopover, setShowPopover] = useState(false);
-  const searchInputRef = useRef<HTMLDivElement | null>(null);
+  const comboboxRef = useRef<HTMLDivElement | null>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverBottomStyle = "top-[140%]";
   const popoverBottomLeftStyle = popoverBottomStyle + " -right-1";
   const popoverBottomRightStyle = popoverBottomStyle + " -left-1";
+
   useEffect(() => {
     window.addEventListener("click", (e: any) => {
       if (
-        searchInputRef.current &&
-        !searchInputRef.current.contains(e.target) &&
+        comboboxRef.current &&
+        !comboboxRef.current.contains(e.target) &&
         popoverRef.current &&
         !popoverRef.current.contains(e.target)
       ) {
@@ -61,27 +79,24 @@ const SearchInput = ({
       }
     });
   }, []);
+
   return (
     <div
-      ref={searchInputRef}
+      ref={comboboxRef}
       className={cn("relative flex flex-row items-center")}
       onClick={() => setShowPopover(!showPopover)}
     >
-      <label
-        htmlFor={id}
-        className="absolute start-2 cursor-pointer font-normal"
-      >
-        <Search />
-      </label>
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
+      <button
         className={cn(
-          "border-0 outline outline-1 outline-black rounded py-1 px-10 focus:outline-4 focus:outline-primary",
+          "min-h-8 border-0 outline outline-1 outline-black rounded py-1 pl-3 pr-10 focus:outline-4 focus:outline-primary text-nowrap bg-white",
           className
         )}
-      />
+      >
+        {selectedOption}
+      </button>
+      <label htmlFor={id} className="absolute end-2 cursor-pointer font-normal">
+        {showPopover ? <ChevronUp /> : <ChevronDown />}
+      </label>
       <div
         ref={popoverRef}
         className={cn(
@@ -98,4 +113,4 @@ const SearchInput = ({
   );
 };
 
-export { Input, SearchInput };
+export { Combobox, Option };

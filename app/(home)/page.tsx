@@ -1,39 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import streaming_img from "../../public/images/live_user_zackrawrr-440x248.jpg";
 import {
   IconButton,
   RoundedImageButton,
   TagButton,
 } from "@/components/buttons";
-import { ChevronDown, ChevronRight, MoreVertical } from "lucide-react";
 import { Streaming } from "@/entities/channel";
 import { streamings, users } from "@/fakedata/leftbar";
-import { ReactNode, useEffect, useState } from "react";
+import { ChevronDown, ChevronRight, MoreVertical } from "lucide-react";
+import Image from "next/image";
+import { ReactNode, useState } from "react";
+import streaming_img from "../../public/images/live_user_zackrawrr-440x248.jpg";
+import { ClassValue } from "clsx";
+import { cn } from "@/utils/cn";
+import { CustomLink, Hover3DBox } from "@/components/hover_3d_box";
 import { Separate } from "@/components/separate";
-
-const StreamingView = ({ viewers }: { viewers: number }) => {
-  return (
-    <div className="relative w-full h-[170px] bg-primary z-0 group">
-      <div className="absolute left-0 top-0 w-2 h-full skew-y-[0deg] bg-primary group-hover:skew-y-[-45deg] group-hover:top-[-0.25rem] ease-linear duration-100"></div>
-      <div className="absolute bottom-0 right-0 w-full h-2 skew-x-[0deg] bg-primary group-hover:skew-x-[-45deg] group-hover:right-[-0.25rem] ease-linear duration-100"></div>
-      <Image
-        width={300}
-        height={170}
-        src={streaming_img}
-        alt="streaming"
-        className="absolute w-full h-full top-0 left-0 z-10 group-hover:translate-x-2 group-hover:-translate-y-2 ease-linear duration-100 cursor-pointer"
-      />
-      <span className="absolute text-white bg-red-600 rounded p-1 top-2 left-2 z-20 group-hover:translate-x-2 group-hover:-translate-y-2 ease-linear duration-100">
-        LIVE
-      </span>
-      <span className="absolute px-1 rounded-sm text-white text-sm bg-black/60 bottom-2 left-2 z-20 group-hover:translate-x-2 group-hover:-translate-y-2 ease-linear duration-100">
-        {viewers} viewers
-      </span>
-    </div>
-  );
-};
 
 const ContentView = ({
   title,
@@ -74,12 +55,14 @@ const ContentView = ({
 };
 
 const LiveChannelView = ({
+  className,
   viewers,
   title,
   category,
   tags,
   channel,
 }: {
+  className?: ClassValue;
   viewers: number;
   title: string;
   tags: string[];
@@ -87,8 +70,14 @@ const LiveChannelView = ({
   channel: string;
 }) => {
   return (
-    <div className="flex flex-col gap-2">
-      <StreamingView viewers={viewers} />
+    <div className={cn("flex flex-col gap-2", className)}>
+      <Hover3DBox
+        viewers={viewers}
+        showViewer={true}
+        showStreaming={true}
+        imageSrc={streaming_img}
+        className="h-[170px]"
+      />
       <ContentView
         channel={channel}
         title={title}
@@ -126,23 +115,6 @@ const LiveChannelListView = ({
   );
 };
 
-const CustomLink = ({
-  content,
-  href = "/",
-}: {
-  content: string;
-  href?: string;
-}) => {
-  return (
-    <a
-      href={href}
-      className="text-primary opacity-100 hover:opacity-90 hover:underline underline-offset-2"
-    >
-      {content}
-    </a>
-  );
-};
-
 const RecommendStreamingView = ({
   title,
   streamings,
@@ -169,16 +141,6 @@ export default function HomePage() {
     const newLimitView = [...limitView];
     newLimitView[index] += 8;
     setLimitView(newLimitView);
-  };
-
-  const showElement = (id: string) => {
-    var x = document.getElementById(id);
-    if (x === null) return;
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
   };
 
   return (
