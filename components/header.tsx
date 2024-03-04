@@ -16,7 +16,7 @@ export const Header = () => {
         <a href="/" className="hover:text-primary">
           Home
         </a>
-        <a href="" className="hover:text-primary">
+        <a href="/following" className="hover:text-primary">
           Following
         </a>
         <a href="/browse" className="hover:text-primary">

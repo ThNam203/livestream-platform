@@ -6,7 +6,7 @@ import esports_svg from "../../../public/images/esports.svg";
 import irl_svg from "../../../public/images/irl.svg";
 import music_svg from "../../../public/images/music.svg";
 import Image from "next/image";
-import { Tab } from "@/components/tab";
+import { Tab, TabContent } from "@/components/tab";
 import { SearchInput } from "@/components/input";
 import { Combobox, Option } from "@/components/combobox";
 import { Popover } from "@/components/popover";
@@ -165,93 +165,103 @@ export default function BrowsePage() {
         />
       </div>
 
-      <div className="flex flex-row justify-between items-center mt-8">
-        <div className="flex flex-row items-center gap-4">
-          <SearchInput
-            id="search-input"
-            placeholder="Search Category Tags"
-            className="text-sm w-[250px] pr-2"
-            popoverPosition="bottom-right"
-            popover={
-              <Popover
-                open={openSearchInputPopover}
-                setOpen={setOpenSearchInputPopover}
-                content={
-                  <div className="flex flex-col">
-                    {categories.map((category, idx) => {
-                      return (
-                        <span
-                          key={idx}
-                          className={cn(
-                            "text-sm hover:bg-hoverColor ease-linear duration-100 cursor-pointer pl-2 pr-[80px] py-1 rounded",
-                            tagFilter === category ? "hidden" : ""
-                          )}
-                          onClick={() => setTagFilter(category)}
-                        >
-                          {category}
-                        </span>
-                      );
-                    })}
-                  </div>
-                }
-              />
-            }
-          />
+      <TabContent
+        contentFor="Categories"
+        selectedTab={selectedTab}
+        content={
+          <div>
+            <div className="flex flex-row justify-between items-center mt-8">
+              <div className="flex flex-row items-center gap-4">
+                <SearchInput
+                  id="search-input"
+                  placeholder="Search Category Tags"
+                  className="text-sm w-[250px] pr-2"
+                  popoverPosition="bottom-right"
+                  popover={
+                    <Popover
+                      open={openSearchInputPopover}
+                      setOpen={setOpenSearchInputPopover}
+                      content={
+                        <div className="flex flex-col">
+                          {categories.map((category, idx) => {
+                            return (
+                              <span
+                                key={idx}
+                                className={cn(
+                                  "text-sm hover:bg-hoverColor ease-linear duration-100 cursor-pointer pl-2 pr-[80px] py-1 rounded",
+                                  tagFilter === category ? "hidden" : ""
+                                )}
+                                onClick={() => setTagFilter(category)}
+                              >
+                                {category}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      }
+                    />
+                  }
+                />
 
-          <span
-            className={cn(
-              "flex flex-row items-center gap-2 bg-gray-200 rounded-3xl px-3 py-1 text-secondaryWord font-semibold text-sm",
-              tagFilter === "" ? "hidden" : ""
-            )}
-          >
-            {tagFilter}
-            <X
-              size={16}
-              strokeWidth={3}
-              className="cursor-pointer hover:opacity-80"
-              onClick={() => setTagFilter("")}
+                <span
+                  className={cn(
+                    "flex flex-row items-center gap-2 bg-gray-200 rounded-3xl px-3 py-1 text-secondaryWord font-semibold text-sm",
+                    tagFilter === "" ? "hidden" : ""
+                  )}
+                >
+                  {tagFilter}
+                  <X
+                    size={16}
+                    strokeWidth={3}
+                    className="cursor-pointer hover:opacity-80"
+                    onClick={() => setTagFilter("")}
+                  />
+                </span>
+              </div>
+              <div className="flex flex-row items-center gap-4">
+                <span className="font-semibold text-sm text-black">
+                  Sort by
+                </span>
+                <Combobox
+                  selectedOption={sortFilter}
+                  className="text-sm"
+                  popoverPosition="bottom-left"
+                  popover={
+                    <Popover
+                      open={openComboboxPopover}
+                      setOpen={setOpenComboboxPopover}
+                      className="p-2 overflow-y-hidden"
+                      content={
+                        <div className="w-full flex flex-col items-center">
+                          <Option
+                            icon={<Sparkles />}
+                            content="Recommended For You"
+                            className="text-sm"
+                            selectedOption={sortFilter}
+                            setSelectedOption={setSortFilter}
+                          />
+                          <Option
+                            icon={<ArrowDownWideNarrow />}
+                            content="Viewers (High to Low)"
+                            className="text-sm"
+                            selectedOption={sortFilter}
+                            setSelectedOption={setSortFilter}
+                          />
+                        </div>
+                      }
+                    />
+                  }
+                />
+              </div>
+            </div>
+
+            <CategoryListView
+              limitView={12}
+              streamings={streamings}
+              className="mt-6"
             />
-          </span>
-        </div>
-        <div className="flex flex-row items-center gap-4">
-          <span className="font-semibold text-sm text-black">Sort by</span>
-          <Combobox
-            selectedOption={sortFilter}
-            className="text-sm"
-            popoverPosition="bottom-left"
-            popover={
-              <Popover
-                open={openComboboxPopover}
-                setOpen={setOpenComboboxPopover}
-                className="p-2 overflow-y-hidden"
-                content={
-                  <div className="w-full flex flex-col items-center">
-                    <Option
-                      icon={<Sparkles />}
-                      content="Recommended For You"
-                      className="text-sm"
-                      selectedOption={sortFilter}
-                      setSelectedOption={setSortFilter}
-                    />
-                    <Option
-                      icon={<ArrowDownWideNarrow />}
-                      content="Viewers (High to Low)"
-                      className="text-sm"
-                      selectedOption={sortFilter}
-                      setSelectedOption={setSortFilter}
-                    />
-                  </div>
-                }
-              />
-            }
-          />
-        </div>
-      </div>
-
-      <CategoryListView
-        limitView={12}
-        streamings={streamings}
-        className="mt-6"
+          </div>
+        }
       />
     </div>
   );

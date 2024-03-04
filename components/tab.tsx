@@ -36,20 +36,28 @@ const Tab = ({
   );
 };
 
-// const Tablist = ({
-//   className,
-//   tabs,
-// }: {
-//   className?: ClassValue;
-//   tabs: ReactNode[];
-// }) => {
-//   return (
-//     <div className={cn("flex flex-row items-center gap-2", className)}>
-//       {tabs.forEach(tab => {
-//         return
-//     })}
-//     </div>
-//   );
-// };
+const TabContent = ({
+  className,
+  contentFor,
+  content,
+  selectedTab,
+}: {
+  className?: ClassValue;
+  contentFor?: string;
+  content: ReactNode;
+  selectedTab?: string;
+}) => {
+  return (
+    <div
+      className={cn(
+        "",
+        selectedTab === contentFor ? "visible" : "hidden",
+        className
+      )}
+    >
+      {content}
+    </div>
+  );
+};
 
-export { Tab };
+export { Tab, TabContent };
