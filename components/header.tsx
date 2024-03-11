@@ -4,9 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IconButton, RoundedIconButton, TextButton } from "./buttons";
 import { SearchInput } from "./input";
+import { useAppSelector } from "@/redux/hooks";
 
 export const Header = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const hasLoggedIn = useAppSelector((state) => state.auth.hasLoggedIn);
   const router = useRouter();
 
   return (
@@ -32,7 +33,7 @@ export const Header = () => {
         />
       </div>
 
-      {isLogin ? (
+      {hasLoggedIn ? (
         <div className="flex flex-row gap-4">
           <IconButton icon={<Bell size={16} />} />
           <IconButton icon={<MessageSquare size={16} />} />

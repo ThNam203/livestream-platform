@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ZodType, z } from "zod";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/auth";
 
 export type RegisterFormData = {
   username: string;
@@ -39,6 +41,7 @@ const registerSchema: ZodType<RegisterFormData> = z
 
 export default function RegisterPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isSigningUp, setIsSigningUp] = useState(false);
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -55,6 +58,7 @@ export default function RegisterPage() {
       .then((res) => {
         const token = res.data.token;
         document.cookie = `token=${token}`;
+        dispatch(login());
         showSuccessToast("Sign Up Success");
         router.push("/");
       })

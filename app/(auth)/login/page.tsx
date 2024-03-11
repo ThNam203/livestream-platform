@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ZodType, z } from "zod";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/auth";
 
 export type LoginFormData = {
   username: string;
@@ -23,6 +25,7 @@ const loginSchema: ZodType<LoginFormData> = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -38,6 +41,7 @@ export default function LoginPage() {
       .then((res) => {
         const token = res.data.token;
         document.cookie = `token=${token}`;
+        dispatch(login());
         showSuccessToast("Login Successfully");
         router.push("/");
       })
