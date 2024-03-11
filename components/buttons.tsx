@@ -2,106 +2,116 @@
 import { cn } from "@/utils/cn";
 import { ClassValue } from "clsx";
 import Image from "next/image";
-import { MouseEventHandler, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import mrbeast_img from "../public/images/mrbeast.jpg";
 
-const IconButton = ({
-  className,
-  icon,
-  disabled = false,
-  onClick,
-}: {
-  className?: ClassValue;
-  icon: ReactNode;
-  disabled?: boolean;
-  onClick?: () => void;
-}) => {
-  return (
-    <button
-      className={cn(
-        "w-8 h-8 hover:bg-hoverColor disabled:hover:bg-transparent disabled:text-secondaryWord rounded flex flex-row items-center justify-center",
-        className
-      )}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {icon}
-    </button>
-  );
-};
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const TextButton = ({
-  className,
-  content,
-  disabled = false,
-  onClick,
-}: {
-  className?: ClassValue;
+export interface IconButtonProps extends ButtonProps {
+  icon: ReactNode;
+}
+
+export interface TextButtonProps extends ButtonProps {
+  iconBefore?: ReactNode;
+  content?: string;
+  iconAfter?: ReactNode;
+}
+
+export interface TagButtonProps extends ButtonProps {
   content: string;
-  disabled?: boolean;
-  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
-}) => {
-  return (
-    <button
-      className={cn(
-        "px-2 py-2 bg-gray-200 hover:bg-hoverColor disabled:hover:bg-transparent rounded text-xs font-bold text-gray-500 flex flex-row items-center justify-center cursor-pointer",
-        className
-      )}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {content}
-    </button>
-  );
-};
+}
 
-const TagButton = ({
-  className,
-  content,
-  disabled = false,
-}: {
-  className?: ClassValue;
-  content: ReactNode;
-  disabled?: boolean;
-}) => {
-  return (
-    <button
-      className={cn(
-        "px-2 py-1 bg-gray-200 hover:bg-hoverColor disabled:hover:bg-transparent rounded-xl text-xs font-semibold text-gray-500 flex flex-row items-center justify-center cursor-pointer",
-        className
-      )}
-      disabled={disabled}
-    >
-      {content}
-    </button>
-  );
-};
-
-const RoundedIconButton = ({
-  className,
-  icon,
-}: {
-  className?: ClassValue;
+export interface RoundedIconButtonProps extends ButtonProps {
   icon: ReactNode;
-}) => {
+}
+
+export interface RoundedImageButtonProps extends ButtonProps {}
+
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  ({ className, icon, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          "w-8 h-8 hover:bg-hoverColor disabled:hover:bg-transparent disabled:text-secondaryWord rounded flex flex-row items-center justify-center",
+          className
+        )}
+        {...props}
+      >
+        {icon}
+      </button>
+    );
+  }
+);
+IconButton.displayName = "IconButton";
+
+const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>(
+  ({ className, content, iconBefore, iconAfter, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          "px-2 py-2 bg-gray-200 hover:bg-hoverColor disabled:hover:bg-transparent rounded text-xs font-bold text-gray-500 flex flex-row items-center justify-center cursor-pointer",
+          className
+        )}
+        {...props}
+      >
+        {iconBefore}
+        {content}
+        {iconAfter}
+      </button>
+    );
+  }
+);
+TextButton.displayName = "TextButton";
+
+const TagButton = React.forwardRef<HTMLButtonElement, TagButtonProps>(
+  ({ className, content, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          "px-2 py-1 bg-gray-200 hover:bg-hoverColor disabled:hover:bg-transparent rounded-xl text-xs font-semibold text-gray-500 flex flex-row items-center justify-center cursor-pointer",
+          className
+        )}
+        {...props}
+      >
+        {content}
+      </button>
+    );
+  }
+);
+TagButton.displayName = "TagButton";
+
+const RoundedIconButton = React.forwardRef<
+  HTMLButtonElement,
+  RoundedIconButtonProps
+>(({ className, icon, ...props }, ref) => {
   return (
     <button
+      ref={ref}
       className={cn(
         "w-8 h-8 rounded-full flex flex-row items-center justify-center",
         className
       )}
+      {...props}
     >
       {icon}
     </button>
   );
-};
+});
+RoundedIconButton.displayName = "RoundedIconButton";
 
 const RoundedImageButton = ({ className }: { className?: ClassValue }) => {
   return (
     <Image
       width={500}
       height={500}
-      className="h-8 w-8 rounded-full overflow-hidden cursor-pointer"
+      className={cn(
+        "h-8 w-8 rounded-full overflow-hidden cursor-pointer",
+        className
+      )}
       src={mrbeast_img}
       alt="mrbeast"
     />
@@ -114,8 +124,8 @@ const OtherButtons = () => {
 
 export {
   IconButton,
-  TagButton,
-  TextButton,
   RoundedIconButton,
   RoundedImageButton,
+  TagButton,
+  TextButton,
 };

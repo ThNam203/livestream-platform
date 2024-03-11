@@ -1,9 +1,8 @@
 "use client";
 import { Bell, MessageSquare, MoreVertical, User } from "lucide-react";
-import { IconButton, RoundedIconButton, TextButton } from "./buttons";
-import { SearchBar } from "./search_bar";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { IconButton, RoundedIconButton, TextButton } from "./buttons";
 import { SearchInput } from "./input";
 
 export const Header = () => {

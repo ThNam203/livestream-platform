@@ -1,32 +1,52 @@
 "use client";
 import { cn } from "@/utils/cn";
 import { ClassValue } from "clsx";
-import { Eye, Search } from "lucide-react";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { Search } from "lucide-react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
-const Input = ({
-  id,
-  type = "text",
-  placeholder,
-  className,
-}: {
-  id?: string;
-  type?: string;
-  placeholder?: string;
-  className?: ClassValue;
-}) => {
-  return (
-    <input
-      id={id}
-      type={type}
-      placeholder={placeholder}
-      className={cn(
-        "border-0 outline outline-1 outline-black rounded py-1 px-3 focus:outline-4 focus:outline-primary font-normal",
-        className
-      )}
-    />
-  );
-};
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  errorMessages?: string;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    { className, type, name, id, placeholder, label, errorMessages, ...props },
+    ref
+  ) => {
+    return (
+      <div className="relative flex flex-col">
+        <label
+          htmlFor={id}
+          className={cn(
+            "font-semibold cursor-pointer mb-2",
+            label ? "" : "hidden"
+          )}
+        >
+          {label}
+        </label>
+        <input
+          ref={ref}
+          id={id}
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          className={cn(
+            "border-0 outline outline-1 outline-black rounded py-1 px-3 focus:outline-4 focus:outline-primary font-normal",
+            errorMessages ? "outline-red-500" : "",
+            className
+          )}
+          {...props}
+        />
+        <span className="absolute -bottom-5 text-red-500 text-xs">
+          {errorMessages ? errorMessages : ""}
+        </span>
+      </div>
+    );
+  }
+);
+Input.displayName = "Input";
 
 const SearchInput = ({
   id,
