@@ -9,7 +9,6 @@ import Image from "next/image";
 import { Tab, TabContent } from "@/components/tab";
 import { SearchInput } from "@/components/input";
 import { Combobox, Option } from "@/components/combobox";
-import { Popover } from "@/components/popover";
 import { ArrowDownWideNarrow, Sparkles, X } from "lucide-react";
 import { categories } from "@/fakedata/browse";
 import { cn } from "@/utils/cn";
@@ -19,6 +18,7 @@ import { TagButton } from "@/components/buttons";
 import { ClassValue } from "clsx";
 import { Streaming } from "@/entities/channel";
 import amongus_img from "../../../public/images/amongus.jpg";
+import { DefaultOption } from "@/components/option";
 
 const BrowseItem = ({ title, icon }: { title: string; icon: any }) => {
   return (
@@ -176,30 +176,19 @@ export default function BrowsePage() {
                   id="search-input"
                   placeholder="Search Category Tags"
                   className="text-sm w-[250px] pr-2"
-                  popoverPosition="bottom-right"
-                  popover={
-                    <Popover
-                      open={openSearchInputPopover}
-                      setOpen={setOpenSearchInputPopover}
-                      content={
-                        <div className="flex flex-col">
-                          {categories.map((category, idx) => {
-                            return (
-                              <span
-                                key={idx}
-                                className={cn(
-                                  "text-sm hover:bg-hoverColor ease-linear duration-100 cursor-pointer pl-2 pr-[80px] py-1 rounded",
-                                  tagFilter === category ? "hidden" : ""
-                                )}
-                                onClick={() => setTagFilter(category)}
-                              >
-                                {category}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      }
-                    />
+                  popoverPosition="bottom-start"
+                  popoverContent={
+                    <div className="flex flex-col">
+                      {categories.map((category, idx) => {
+                        return (
+                          <DefaultOption
+                            key={idx}
+                            content={<span>{category}</span>}
+                            onClick={() => setTagFilter(category)}
+                          />
+                        );
+                      })}
+                    </div>
                   }
                 />
 
@@ -225,31 +214,24 @@ export default function BrowsePage() {
                 <Combobox
                   selectedOption={sortFilter}
                   className="text-sm"
-                  popoverPosition="bottom-left"
-                  popover={
-                    <Popover
-                      open={openComboboxPopover}
-                      setOpen={setOpenComboboxPopover}
-                      className="p-2 overflow-y-hidden"
-                      content={
-                        <div className="w-full flex flex-col items-center">
-                          <Option
-                            icon={<Sparkles />}
-                            content="Recommended For You"
-                            className="text-sm"
-                            selectedOption={sortFilter}
-                            setSelectedOption={setSortFilter}
-                          />
-                          <Option
-                            icon={<ArrowDownWideNarrow />}
-                            content="Viewers (High to Low)"
-                            className="text-sm"
-                            selectedOption={sortFilter}
-                            setSelectedOption={setSortFilter}
-                          />
-                        </div>
-                      }
-                    />
+                  popoverPosition="bottom-end"
+                  popoverContent={
+                    <div className="w-full flex flex-col items-center">
+                      <Option
+                        icon={<Sparkles />}
+                        content="Recommended For You"
+                        className="text-sm"
+                        selectedOption={sortFilter}
+                        setSelectedOption={setSortFilter}
+                      />
+                      <Option
+                        icon={<ArrowDownWideNarrow />}
+                        content="Viewers (High to Low)"
+                        className="text-sm"
+                        selectedOption={sortFilter}
+                        setSelectedOption={setSortFilter}
+                      />
+                    </div>
                   }
                 />
               </div>

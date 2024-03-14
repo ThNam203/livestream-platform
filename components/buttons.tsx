@@ -52,7 +52,7 @@ const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "px-2 py-2 bg-gray-200 hover:bg-hoverColor disabled:hover:bg-transparent rounded text-xs font-bold text-gray-500 flex flex-row items-center justify-center cursor-pointer",
+          "px-2 py-2 bg-gray-200 hover:bg-hoverColor disabled:bg-primary/60 rounded text-xs font-bold text-gray-500 flex flex-row items-center justify-center cursor-pointer disabled:cursor-default",
           className
         )}
         {...props}
@@ -92,7 +92,7 @@ const RoundedIconButton = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "w-8 h-8 rounded-full flex flex-row items-center justify-center",
+        "w-8 h-8 rounded-full flex flex-row items-center justify-center outline-none",
         className
       )}
       {...props}

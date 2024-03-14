@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/utils/cn";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { ClassValue } from "clsx";
 import {
   ArrowDownWideNarrow,
@@ -51,65 +52,63 @@ const Combobox = ({
   id,
   selectedOption,
   className,
-  popover,
-  popoverPosition = "bottom-center",
+  popoverContent,
+  popoverPosition = "bottom",
 }: {
   id?: string;
   selectedOption: string;
-  popover?: ReactNode;
-  popoverPosition?: "bottom-right" | "bottom-left" | "bottom-center";
+  popoverContent?: ReactNode;
+  popoverPosition?:
+    | "top"
+    | "bottom"
+    | "right"
+    | "left"
+    | "top-start"
+    | "top-end"
+    | "bottom-start"
+    | "bottom-end"
+    | "left-start"
+    | "left-end"
+    | "right-start"
+    | "right-end";
   className?: ClassValue;
 }) => {
   const [showPopover, setShowPopover] = useState(false);
-  const comboboxRef = useRef<HTMLDivElement | null>(null);
-  const popoverRef = useRef<HTMLDivElement | null>(null);
-  const popoverBottomStyle = "top-[140%]";
-  const popoverBottomLeftStyle = popoverBottomStyle + " -right-1";
-  const popoverBottomRightStyle = popoverBottomStyle + " -left-1";
-
-  useEffect(() => {
-    window.addEventListener("click", (e: any) => {
-      if (
-        comboboxRef.current &&
-        !comboboxRef.current.contains(e.target) &&
-        popoverRef.current &&
-        !popoverRef.current.contains(e.target)
-      ) {
-        setShowPopover(false);
-      }
-    });
-  }, []);
 
   return (
-    <div
-      ref={comboboxRef}
-      className={cn("relative flex flex-row items-center")}
-      onClick={() => setShowPopover(!showPopover)}
+    <Popover
+      isOpen={showPopover}
+      onOpenChange={() => setShowPopover(!showPopover)}
+      placement={popoverPosition}
+      showArrow={true}
     >
-      <button
-        className={cn(
-          "min-h-8 border-0 outline outline-1 outline-black rounded py-1 pl-3 pr-10 focus:outline-4 focus:outline-primary text-nowrap bg-white",
-          className
-        )}
-      >
-        {selectedOption}
-      </button>
-      <label htmlFor={id} className="absolute end-2 cursor-pointer font-normal">
-        {showPopover ? <ChevronUp /> : <ChevronDown />}
-      </label>
-      <div
-        ref={popoverRef}
-        className={cn(
-          "absolute select-none z-30",
-          popoverPosition === "bottom-left" ? popoverBottomLeftStyle : "",
-          popoverPosition === "bottom-right" ? popoverBottomRightStyle : "",
-          popoverPosition === "bottom-center" ? popoverBottomStyle : "",
-          showPopover ? "visible" : "hidden"
-        )}
-      >
-        {popover}
-      </div>
-    </div>
+      <PopoverTrigger>
+        <div className={cn("relative flex flex-row items-center")}>
+          <button
+            className={cn(
+              "min-h-8 border-0 outline outline-1 outline-black rounded py-1 pl-3 pr-10 focus:outline-4 focus:outline-primary text-nowrap bg-white",
+              className
+            )}
+          >
+            {selectedOption}
+          </button>
+          <label
+            htmlFor={id}
+            className="absolute end-2 cursor-pointer font-normal"
+          >
+            {showPopover ? <ChevronUp /> : <ChevronDown />}
+          </label>
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="p-2 rounded-md bg-white shadow-primaryShadow">
+        <div
+          className="overflow-y-hidden"
+          onClick={() => setShowPopover(!showPopover)}
+        >
+          {popoverContent}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 
