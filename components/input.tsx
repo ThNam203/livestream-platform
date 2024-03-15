@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/utils/cn";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { ClassValue } from "clsx";
 import { Search } from "lucide-react";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
@@ -51,70 +52,55 @@ Input.displayName = "Input";
 const SearchInput = ({
   id,
   type = "text",
-  popover,
-  popoverPosition = "bottom-center",
+  popoverPosition = "bottom",
+  popoverContent,
   placeholder,
   className,
 }: {
   id?: string;
   type?: string;
-  popover?: ReactNode;
-  popoverPosition?: "bottom-right" | "bottom-left" | "bottom-center";
+  popoverPosition?: "bottom-start" | "bottom-end" | "bottom";
+  popoverContent?: ReactNode;
   placeholder?: string;
   className?: ClassValue;
 }) => {
   const [showPopover, setShowPopover] = useState(false);
-  const searchInputRef = useRef<HTMLDivElement | null>(null);
-  const popoverRef = useRef<HTMLDivElement | null>(null);
-  const popoverBottomStyle = "top-[140%]";
-  const popoverBottomLeftStyle = popoverBottomStyle + " -right-1";
-  const popoverBottomRightStyle = popoverBottomStyle + " -left-1";
-  useEffect(() => {
-    window.addEventListener("click", (e: any) => {
-      if (
-        searchInputRef.current &&
-        !searchInputRef.current.contains(e.target) &&
-        popoverRef.current &&
-        !popoverRef.current.contains(e.target)
-      ) {
-        setShowPopover(false);
-      }
-    });
-  }, []);
+
   return (
-    <div
-      ref={searchInputRef}
-      className={cn("relative flex flex-row items-center")}
-      onClick={() => setShowPopover(!showPopover)}
+    <Popover
+      isOpen={showPopover}
+      onOpenChange={setShowPopover}
+      placement={popoverPosition}
+      showArrow={true}
     >
-      <label
-        htmlFor={id}
-        className="absolute start-2 cursor-pointer font-normal"
-      >
-        <Search />
-      </label>
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        className={cn(
-          "border-0 outline outline-1 outline-black rounded py-1 px-10 focus:outline-4 focus:outline-primary",
-          className
-        )}
-      />
-      <div
-        ref={popoverRef}
-        className={cn(
-          "absolute select-none z-30",
-          popoverPosition === "bottom-left" ? popoverBottomLeftStyle : "",
-          popoverPosition === "bottom-right" ? popoverBottomRightStyle : "",
-          popoverPosition === "bottom-center" ? popoverBottomStyle : "",
-          showPopover ? "visible" : "hidden"
-        )}
-      >
-        {popover}
-      </div>
-    </div>
+      <PopoverTrigger>
+        <div className={cn("relative flex flex-row items-center")}>
+          <label
+            htmlFor={id}
+            className="absolute start-2 cursor-pointer font-normal"
+          >
+            <Search />
+          </label>
+          <input
+            id={id}
+            type={type}
+            placeholder={placeholder}
+            className={cn(
+              "border-0 outline outline-1 outline-black rounded py-1 px-10 focus:outline-4 focus:outline-primary",
+              className
+            )}
+          />
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 bg-white shadow-primaryShadow">
+        <div
+          className="max-h-[250px] overflow-y-scroll"
+          onClick={() => setShowPopover(!showPopover)}
+        >
+          {popoverContent}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 

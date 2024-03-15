@@ -2,7 +2,7 @@
 
 import { showErrorToast, showSuccessToast } from "@/components/toast";
 import { TextButton } from "@/components/buttons";
-import LoadingIcon from "@/components/icon_loading";
+import { LoadingIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import AuthService from "@/services/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { ZodType, z } from "zod";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/auth";
+import { setCookie } from "cookies-next";
 
 export type LoginFormData = {
   username: string;
@@ -37,10 +38,11 @@ export default function LoginPage() {
   } = form;
 
   const handleFormSubmit = async (data: LoginFormData) => {
+    setIsLoggingIn(true);
     await AuthService.Login(data)
       .then((res) => {
         const token = res.data.token;
-        document.cookie = `token=${token}`;
+        setCookie("token", token);
         dispatch(login());
         showSuccessToast("Login Successfully");
         router.push("/");
@@ -48,6 +50,9 @@ export default function LoginPage() {
       .catch((err) => {
         showErrorToast("Login Failed");
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoggingIn(false);
       });
   };
   return (
@@ -82,14 +87,15 @@ export default function LoginPage() {
           <TextButton
             type="submit"
             iconBefore={isLoggingIn ? <LoadingIcon /> : null}
-            content="Log In"
+            content={isLoggingIn ? "" : "Log In"}
             disabled={isLoggingIn}
             className="mt-6 text-sm font-bold text-white bg-primary hover:bg-primary/90"
           />
           <TextButton
             type="button"
             content="Don't have an account? Sign up"
-            className="mt-4 font-bold text-primary bg-transparent hover:text-primaryWord"
+            className="mt-4 font-bold text-primary bg-transparent hover:text-primaryWord disabled:bg-transparent disabled:text-primary"
+            disabled={isLoggingIn}
             onClick={() => router.push("/register")}
           />
         </div>

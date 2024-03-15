@@ -6,7 +6,7 @@ import {
   showSuccessToast,
 } from "@/components/toast";
 import { IconButton, TextButton } from "@/components/buttons";
-import LoadingIcon from "@/components/icon_loading";
+import { LoadingIcon } from "@/components/icons";
 import { Input } from "@/components/input";
 import AuthService from "@/services/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { ZodType, z } from "zod";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/auth";
+import { setCookie } from "cookies-next";
 
 export type RegisterFormData = {
   username: string;
@@ -57,8 +58,7 @@ export default function RegisterPage() {
     await AuthService.Register(data)
       .then((res) => {
         const token = res.data.token;
-        document.cookie = `token=${token}`;
-        dispatch(login());
+        setCookie("token", token);
         showSuccessToast("Sign Up Success");
         router.push("/");
       })

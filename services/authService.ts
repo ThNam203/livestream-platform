@@ -26,14 +26,19 @@ const Login = (data: LoginFormData) => {
   );
 };
 
-const logOut = () => {
-  return AxiosService.post("/auth/logout", {});
+const LogOut = (token: string) => {
+  return AxiosService.get("/auth/logout", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+  });
 };
 
 const AuthService = {
   Register,
   Login,
-  logOut,
+  LogOut,
 };
 
 export default AuthService;
