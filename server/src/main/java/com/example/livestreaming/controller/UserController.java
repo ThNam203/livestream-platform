@@ -16,7 +16,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     @GetMapping
-    public ResponseEntity<String> enableServer () {
+    public ResponseEntity<String> getUsers () {
         return ResponseEntity.ok("server enabled");
     }
     @GetMapping("/token/{id}")

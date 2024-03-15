@@ -72,8 +72,4 @@ public class AuthenticationService {
         });
         tokenRepository.saveAll(validTokenList);
     }
-
-    public void logout () {
-
-    }
 }

@@ -30,7 +30,6 @@ const LogOut = (token: string) => {
   return AxiosService.get("/auth/logout", {
     headers: {
       Authorization: `Bearer ${token}`,
-      Accept: "application/json",
     },
     withCredentials: true,
   });

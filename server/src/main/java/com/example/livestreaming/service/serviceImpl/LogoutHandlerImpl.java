@@ -22,6 +22,10 @@ public class LogoutHandlerImpl implements LogoutHandler {
         if(storeToken != null) {
             storeToken.setExpired(true);
             storeToken.setRevoked(true);
+            var toDelete = tokenRepository.findAllValidTokenByUser(storeToken.getUser().getId());
+            toDelete.forEach(t -> {
+                tokenRepository.deleteById(t.getId());
+            });
             tokenRepository.save(storeToken);
         }
     }
