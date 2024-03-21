@@ -21,6 +21,9 @@ const config: Config = {
         hoverColor: "#e3e3e6",
         leftBarColor: "#efeff1",
       },
+      boxShadow: {
+        primaryShadow: "0 0 45px -15px rgba(0,0,0,0.3)",
+      },
     },
   },
   plugins: [],

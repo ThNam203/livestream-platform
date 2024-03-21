@@ -68,7 +68,6 @@ export const LeftBar = () => {
     <div className="fixed h-full w-64 bg-leftBarColor flex flex-col gap-2 py-2 text-primaryWord">
       <div className="flex flex-row justify-between items-center px-2">
         <span className="font-semibold text-lg">For you</span>
-        <IconButton icon={<ArrowLeftFromLine size={18} />} />
       </div>
       <div className="flex flex-row justify-between items-center px-2 mt-2">
         <span className="font-semibold text-sm text-secondaryWord">
