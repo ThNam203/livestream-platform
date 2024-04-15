@@ -7,7 +7,7 @@ app.use(cors());
 const server = http.createServer(app, {
   cors: {
     origin: "http://localhost:3000",
-	credentials: true
+    credentials: true,
   },
 });
 const { Server } = require("socket.io");

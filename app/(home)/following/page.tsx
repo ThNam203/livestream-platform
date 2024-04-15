@@ -9,7 +9,6 @@ import Image from "next/image";
 import { Tab, TabContent } from "@/components/tab";
 import { SearchInput } from "@/components/input";
 import { Combobox, Option } from "@/components/combobox";
-import { Popover } from "@/components/popover";
 import { ArrowDownWideNarrow, ChevronDown, Sparkles, X } from "lucide-react";
 import { categories } from "@/fakedata/browse";
 import { cn } from "@/utils/cn";

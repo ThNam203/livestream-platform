@@ -11,22 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/file")
 @RequiredArgsConstructor
-public class UserController {
+public class FileController {
     private final UserService userService;
     @GetMapping
-    public ResponseEntity<String> getUsers () {
-        return ResponseEntity.ok("server enabled");
-    }
-    @GetMapping("/token/{id}")
-    public ResponseEntity<List<String>> getValidToken (@PathVariable Integer id) {
-        var list = userService.getToken(id);
-        return ResponseEntity.ok(list);
-    }
-    @GetMapping("/hello")
     public ResponseEntity<String> sayHelloFromServer () {
-        return ResponseEntity.ok("Hello from server");
+        return ResponseEntity.ok("Test getting file from server");
     }
 
 }
