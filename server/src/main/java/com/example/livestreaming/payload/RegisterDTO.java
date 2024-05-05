@@ -1,4 +1,4 @@
-package com.example.livestreaming.auth;
+package com.example.livestreaming.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class RegisterDTO {
     private String username;
     private String password;
+    private String birth;
+    private String email;
 }

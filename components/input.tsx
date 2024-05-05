@@ -9,6 +9,8 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   errorMessages?: string;
+  iconBefore?: ReactNode;
+  iconAfter?: ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -48,6 +50,46 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   }
 );
 Input.displayName = "Input";
+
+const InputWithIcon = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    { className, id, label, errorMessages, iconAfter, iconBefore, ...props },
+    ref
+  ) => {
+    return (
+      <div className="relative flex flex-col">
+        <label
+          htmlFor={id}
+          className={cn(
+            "font-semibold cursor-pointer mb-2",
+            label ? "" : "hidden"
+          )}
+        >
+          {label}
+        </label>
+        <div className="flex flex-row items-center border-0 outline outline-1 outline-black rounded py-1 px-3 focus-within:outline-4 focus-within:outline-primary">
+          {iconBefore}
+          <input
+            ref={ref}
+            id={id}
+            className={cn(
+              "flex-1 font-normal border-0 outline-0",
+              errorMessages ? "outline-red-500" : "",
+              className
+            )}
+            {...props}
+          />
+          {iconAfter}
+        </div>
+
+        <span className="absolute -bottom-5 text-red-500 text-xs">
+          {errorMessages ? errorMessages : ""}
+        </span>
+      </div>
+    );
+  }
+);
+InputWithIcon.displayName = "InputWithIcon";
 
 const SearchInput = ({
   id,
@@ -104,4 +146,4 @@ const SearchInput = ({
   );
 };
 
-export { Input, SearchInput };
+export { Input, InputWithIcon, SearchInput };

@@ -1,4 +1,4 @@
-package com.example.livestreaming.auth;
+package com.example.livestreaming.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
-    private String token;
+public class JoinRoomRequestDTO {
+    public Integer roomId;
+    public Integer senderId;
+    public String sender;
 }

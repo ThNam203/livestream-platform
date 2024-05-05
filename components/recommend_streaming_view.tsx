@@ -13,6 +13,8 @@ import { ClassValue } from "clsx";
 import { MoreVertical } from "lucide-react";
 import { ReactNode } from "react";
 import streaming_img from "../public/images/live_user_zackrawrr-440x248.jpg";
+import { socket_chat } from "@/socket_chat";
+import { useRouter } from "next/navigation";
 
 const ContentView = ({
   title,
@@ -59,6 +61,7 @@ const LiveChannelView = ({
   category,
   tags,
   channel,
+  onClick,
 }: {
   className?: ClassValue;
   viewers: number;
@@ -66,6 +69,7 @@ const LiveChannelView = ({
   tags: string[];
   category?: string;
   channel: string;
+  onClick?: () => void;
 }) => {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
@@ -75,6 +79,7 @@ const LiveChannelView = ({
         showStreaming={true}
         imageSrc={streaming_img}
         className="h-[170px]"
+        onClick={onClick}
       />
       <ContentView
         channel={channel}
@@ -93,6 +98,7 @@ const LiveChannelListView = ({
   limitView: number;
   streamings: Streaming[];
 }) => {
+  const router = useRouter();
   const streamingData = streamings.slice(0, limitView);
   return (
     <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4">
@@ -106,6 +112,15 @@ const LiveChannelListView = ({
             tags={streaming.tags}
             viewers={120}
             category={streaming.category}
+            onClick={() => {
+              socket_chat.emit("join", {
+                roomId: streaming.id,
+                senderId: user ? user.id : 0,
+                sender: user ? user.username : "",
+              });
+
+              router.push(`/livestreaming`);
+            }}
           />
         );
       })}

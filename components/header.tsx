@@ -1,6 +1,12 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
-import { Bell, MessageSquare, MoreVertical, User } from "lucide-react";
+import {
+  Bell,
+  MessageSquare,
+  MoreVertical,
+  Podcast,
+  User as UserUI,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IconButton, RoundedIconButton, TextButton } from "./buttons";
@@ -12,19 +18,30 @@ import { use, useEffect, useState } from "react";
 import AuthService from "@/services/authService";
 import { showErrorToast, showSuccessToast } from "./toast";
 import { getCookie, setCookie } from "cookies-next";
+import { useAppSelector } from "@/redux/hooks";
+import UserService from "@/services/userService";
+import { setProfile } from "@/redux/slices/profile";
+import { User } from "@/entities/user";
 
 export const Header = () => {
   const router = useRouter();
   const [showPopover, setShowPopover] = useState(false);
-  const [hasLoggedIn, setHasLoggedIn] = useState(false);
+  const [thisUser, setThisUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const token = getCookie("token");
-    if (token) setHasLoggedIn(true);
+    const fetchData = async () => {
+      await UserService.getInfo()
+        .then((res) => {
+          setProfile(res.data);
+          setThisUser(res.data);
+        })
+        .catch((err) => showErrorToast(err));
+    };
+    fetchData();
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full flex flex-row items-center justify-between text-xl font-semibold text-primaryWord bg-white px-4 py-2 shadow z-[49]">
+    <nav className="w-full h-12 flex flex-row items-center justify-between text-xl font-semibold text-primaryWord bg-white px-4 py-2 shadow z-[49]">
       <div className="flex flex-row gap-10">
         <Link href="/" className="hover:text-primary">
           Home
@@ -46,8 +63,17 @@ export const Header = () => {
         />
       </div>
 
-      {hasLoggedIn ? (
+      {thisUser ? (
         <div className="flex flex-row gap-4">
+          <TextButton
+            content="Stream now"
+            iconAfter={<Podcast size={16} />}
+            className="bg-primary hover:bg-secondary text-white"
+            onClick={() => {
+              setCookie("goStreaming", JSON.stringify(true));
+              router.push("/livestreaming");
+            }}
+          />
           <IconButton icon={<Bell size={16} />} />
           <IconButton icon={<MessageSquare size={16} />} />
 
@@ -60,7 +86,7 @@ export const Header = () => {
             <PopoverTrigger>
               <RoundedIconButton
                 className="bg-[#69ffc3]"
-                icon={<User size={16} />}
+                icon={<UserUI size={16} />}
               />
             </PopoverTrigger>
             <PopoverContent>
@@ -71,9 +97,11 @@ export const Header = () => {
                 <div className="flex flex-row gap-2 items-center">
                   <RoundedIconButton
                     className="bg-[#69ffc3] w-8 h-8"
-                    icon={<User size={16} />}
+                    icon={<UserUI size={16} />}
                   />
-                  <span className="text-xs font-semibold">ptdat4823</span>
+                  <span className="text-xs font-semibold">
+                    {thisUser.username}
+                  </span>
                 </div>
 
                 <Separate classname="my-2" />

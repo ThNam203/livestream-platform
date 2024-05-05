@@ -3,8 +3,8 @@ import ReactPlayer, { ReactPlayerProps } from "react-player";
 
 export default function ReactPlayerWrapper(
   props: ReactPlayerProps & {
-    playerRef: LegacyRef<ReactPlayer>;
+    playerref: LegacyRef<ReactPlayer>;
   }
 ) {
-  return <ReactPlayer ref={props.playerRef} {...props} />;
+  return <ReactPlayer ref={props.playerref} {...props} />;
 }

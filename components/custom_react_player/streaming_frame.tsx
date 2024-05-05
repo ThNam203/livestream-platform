@@ -10,19 +10,14 @@ import {
   VolumeUp,
 } from "@mui/icons-material";
 import { Slider } from "@mui/material";
-import React, {
-  LegacyRef,
-  MutableRefObject,
-  forwardRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import screenfull from "screenfull";
-import { formatTime } from "../../utils/func";
-import { cn } from "../../utils/cn";
 import { ClassValue } from "clsx";
+import { LegacyRef, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
+import screenfull from "screenfull";
+import { cn } from "../../utils/cn";
+import { formatTime } from "../../utils/func";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import dynamic from "next/dynamic";
 const ReactPlayerWrapper = dynamic(() => import("./react_player_wrapper"), {
@@ -72,11 +67,20 @@ type FnControl = {
   handleResolutionChange: (value: number) => void;
 };
 
-export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
+export function StreamingFrame({
+  videoInfo,
+  className,
+  onVideoPlay,
+}: {
+  videoInfo: VideoInfo;
+  onVideoPlay?: (currentTime: number) => void;
+  className?: ClassValue;
+}) {
   const ref: LegacyRef<ReactPlayer> = useRef(null);
   const [count, setCount] = useState(0); // for hide control bar
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // for loading spinner
   const [currentTime, setCurrentTime] = useState(0);
   const [loaded, setLoaded] = useState(0);
   const [config, setConfig] = useState<Config>({
@@ -144,46 +148,57 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
   };
 
   return (
-    <div
-      className="w-[1024px] relative"
-      id="frame"
-      onMouseMove={() => {
-        setCount(0);
-      }}
-      onClick={() => {
-        setCount(0);
-      }}
-    >
-      <ReactPlayerWrapper
-        playerRef={ref}
-        url={videoInfo.videoUrl}
-        muted={config.volumeValue === 0 ? true : false}
-        volume={config.volumeValue / 100}
-        playing={isPlaying}
-        width={"100%"}
-        height={"100%"}
-        playbackRate={config.playbackRate}
-        loop={config.loop}
-        onProgress={(state) => {
-          setCount(count + 1);
+    <div className={cn("w-[1024px] relative", className)}>
+      {isLoading && (
+        <div className="w-full z-30 absolute top-0">
+          <Skeleton width="100%" height="600px" borderRadius="0" />
+        </div>
+      )}
 
-          setLoaded(state.loaded);
-          setCurrentTime(state.playedSeconds);
+      <div
+        className="w-full relative"
+        id="frame"
+        onMouseMove={() => {
+          setCount(0);
         }}
-        onDuration={(duration) => {
-          setDuration(duration);
+        onClick={() => {
+          setCount(0);
         }}
-      />
-      <FrontOfVideo
-        isPlaying={isPlaying}
-        currentTime={currentTime}
-        loaded={loaded}
-        config={config}
-        fnControl={fnControl}
-        duration={duration}
-        videoInfo={videoInfo}
-        className={count > 3 ? "opacity-0" : "opacity-100"}
-      />
+      >
+        <ReactPlayerWrapper
+          playerRef={ref}
+          url={videoInfo.videoUrl}
+          onReady={() => setIsLoading(false)}
+          muted={config.volumeValue === 0 ? true : false}
+          volume={config.volumeValue / 100}
+          playing={isPlaying}
+          width={"100%"}
+          height={"100%"}
+          playbackRate={config.playbackRate}
+          loop={config.loop}
+          onProgress={(state) => {
+            setCount(count + 1);
+
+            setLoaded(state.loaded);
+            setCurrentTime(state.playedSeconds);
+            onVideoPlay && onVideoPlay(state.playedSeconds);
+          }}
+          onDuration={(duration) => {
+            setDuration(duration);
+          }}
+        />
+
+        <FrontOfVideo
+          isPlaying={isPlaying}
+          currentTime={currentTime}
+          loaded={loaded}
+          config={config}
+          fnControl={fnControl}
+          duration={duration}
+          videoInfo={videoInfo}
+          className={count > 3 ? "opacity-0" : "opacity-100"}
+        />
+      </div>
     </div>
   );
 }
@@ -379,7 +394,7 @@ function VideoControlButtons({
         </div>
         <VolumeButton onVolumeChange={fnControl.handleVolumeChange} />
         <span className="text-white">
-          {formatTime(currentTime)}/{formatTime(duration)}
+          {formatTime(currentTime)} / {formatTime(duration)}
         </span>
       </div>
 

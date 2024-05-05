@@ -4,10 +4,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
 import java.util.Base64;
@@ -20,6 +24,12 @@ import java.util.function.Function;
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
+
+    @Value("${application.security.jwt.expiration}")
+    private Integer jwtExpiration;
+
+    @Value("${application.security.jwt.token}")
+    private String jwtAccess;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -71,5 +81,26 @@ public class JwtService {
     public boolean isTokenExpired (String token) {
         final Date dateExpired = extractExpiration(token);
         return dateExpired.before(new Date());
+    }
+
+    public ResponseCookie generateCookie(String token) {
+        return generateCookie(jwtAccess, token, (int) (jwtExpiration/1000) - 1);
+    }
+
+    private ResponseCookie generateCookie(String name, String value, int maxAgeSeconds) {
+        return ResponseCookie.from(name, value).secure(true).sameSite("None").path("/").maxAge(maxAgeSeconds).httpOnly(true).build();
+    }
+
+    public String getJwtAccessFromCookie(HttpServletRequest request) {
+        return getCookieValueByName(request, jwtAccess);
+    }
+
+    private String getCookieValueByName(HttpServletRequest request, String name) {
+        Cookie cookie = WebUtils.getCookie(request, name);
+        if (cookie != null) {
+            return cookie.getValue();
+        } else {
+            return null;
+        }
     }
 }

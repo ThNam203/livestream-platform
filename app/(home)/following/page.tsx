@@ -146,7 +146,7 @@ export default function FollowingPage() {
   };
 
   return (
-    <div className="flex flex-col p-8">
+    <div className="flex flex-col p-8 h-full overflow-y-scroll">
       <h1 className="text-5xl font-bold">Following</h1>
       <div className="flex flex-row items-center gap-6 mt-6">
         <Tab

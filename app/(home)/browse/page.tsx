@@ -143,7 +143,7 @@ export default function BrowsePage() {
   const [tagFilter, setTagFilter] = useState<string>("");
 
   return (
-    <div className="flex flex-col p-8">
+    <div className="flex flex-col p-8 h-full overflow-y-scroll">
       <h1 className="text-5xl font-bold">Browse</h1>
       <div className="mt-6 w-full flex flex-row items-center justify-between gap-2">
         {browses.map((browse, idx) => (

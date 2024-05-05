@@ -11,16 +11,19 @@ const Hover3DBox = ({
   viewers = 0,
   showViewer = false,
   showStreaming = false,
+  onClick,
 }: {
   className?: ClassValue;
   imageSrc: StaticImport | string;
   viewers?: number;
   showViewer?: boolean;
   showStreaming?: boolean;
+  onClick?: () => void;
 }) => {
   return (
     <div
       className={cn("relative w-full h-full bg-primary z-0 group", className)}
+      onClick={onClick}
     >
       <div className="absolute left-0 top-0 w-2 h-full skew-y-[0deg] bg-primary group-hover:skew-y-[-45deg] group-hover:top-[-0.25rem] ease-linear duration-100"></div>
       <div className="absolute bottom-0 right-0 w-full h-2 skew-x-[0deg] bg-primary group-hover:skew-x-[-45deg] group-hover:right-[-0.25rem] ease-linear duration-100"></div>
