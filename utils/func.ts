@@ -31,8 +31,7 @@ const wordColorList = [
   "text-gray-500",
 ];
 
-export const getColorByMiliseconds = (seconds: number) => {
-  const randomColor =
-    wordColorList[Math.floor((seconds / 60) * wordColorList.length)];
+export const getColorBySeconds = (seconds: number) => {
+  const randomColor = wordColorList[seconds % wordColorList.length];
   return randomColor;
 };

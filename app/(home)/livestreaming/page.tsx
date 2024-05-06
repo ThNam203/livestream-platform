@@ -15,6 +15,7 @@ import UserService from "@/services/userService";
 import socket from "@/socket";
 import { socket_chat } from "@/socket_chat";
 import { getCookie } from "cookies-next";
+import { format } from "date-fns";
 import { Smile } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -26,7 +27,7 @@ export default function Livestreaming() {
 
   //chat socket
   const [chatMesssages, setChatMessages] = useState<ChatMessageProps[]>([]);
-  const [timeOnVideo, setTime] = useState(new Date());
+  const [timeVideoStart, setTimeVideoStart] = useState<Date>(new Date());
   const [chatMessage, setChatMessage] = useState("");
   const [thisUser, setThisUser] = useState<User | null>(
     useAppSelector((state) => state.profile.user)
@@ -64,38 +65,54 @@ export default function Livestreaming() {
   }, []);
 
   useEffect(() => {
+    console.log("thisUser change");
     if (!thisUser) return;
+    socket_chat.connect();
     socket_chat.on("connect", () => {
       console.log("connected");
     });
 
-    const isStream = getCookie("goStreaming") === "true" ? true : false;
-    console.log("isStream: ", isStream);
-    if (isStream) {
-      socket_chat.emit("create", {
-        roomId: 1,
+    const isStreaming = getCookie("isStreaming") === "true" ? true : false;
+    if (isStreaming) {
+      socket_chat.emit("join", {
+        roomId: thisUser.id,
         roomName: "Livestream title",
         senderId: thisUser.id,
-        senderName: thisUser.username,
+        sender: thisUser.username,
       });
     } else {
       socket_chat.emit("join", {
         roomId: 1,
+        roomName: "Livestream title",
         senderId: thisUser.id,
         sender: thisUser.username,
       });
     }
 
-    socket_chat.on("disconnect", () => {
-      console.log("disconnected");
-    });
-
     return () => {
       socket_chat.off("connect");
       socket_chat.off("disconnect");
       socket_chat.off("message");
+      socket_chat.disconnect();
     };
   }, [thisUser]);
+
+  socket_chat.on("timeStart", (mes: any) => {
+    setTimeVideoStart(new Date(mes.time));
+  });
+
+  socket_chat.on("disconnect", () => {
+    console.log("disconnected");
+    const lastMes: ChatMessageProps = {
+      roomId: 1,
+      sender: "server",
+      message: "The room was closed",
+      time: new Date().toISOString(),
+      type: "LEAVE",
+    };
+    addMessage(lastMes);
+    socket_chat.disconnect();
+  });
 
   socket_chat.on("message", (mes: any) => {
     const newMessage: ChatMessageProps = {
@@ -123,10 +140,6 @@ export default function Livestreaming() {
 
     addMessages(newMessages);
   });
-
-  useEffect(() => {
-    console.log("chatMessage: ", chatMesssages);
-  }, [chatMesssages]);
 
   const setupStreams = async () => {
     const videoStream = await navigator.mediaDevices.getDisplayMedia({
@@ -199,7 +212,13 @@ export default function Livestreaming() {
       "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
   };
 
-  const onVideoPlay = (currentTime: number) => {};
+  const getTimeBaseOnVideo = (timeUserChat: Date, timeVideoStart: Date) => {
+    const timeChat = timeUserChat.getTime() / 1000;
+    const timeStart = timeVideoStart.getTime() / 1000;
+    console.log("timeChat: ", timeChat);
+    console.log("timeStart: ", timeStart);
+    return Math.floor(timeChat - timeStart);
+  };
 
   const addMessage = (message: ChatMessageProps) => {
     setChatMessages([...chatMesssages, message]);
@@ -222,9 +241,19 @@ export default function Livestreaming() {
     setChatMessage("");
   };
 
+  useEffect(() => {
+    console.log("time start: ", timeVideoStart);
+  }, [timeVideoStart]);
+
   return (
     <div className="w-full h-full overflow-hidden">
-      <StreamingFrame videoInfo={videoInfo} className="w-[calc(100%-400px)]" />
+      <StreamingFrame
+        videoInfo={videoInfo}
+        onVideoStart={() => {
+          setTimeVideoStart(new Date());
+        }}
+        className="w-[calc(100%-400px)]"
+      />
       <div className="fixed top-12 right-0 bottom-0 w-[400px] font-sans border-l flex flex-col justify-between">
         <div className="w-full flex flex-row justify-center mx-2 py-4 border-y">
           <span className="font-semibold text-primaryWord">STREAM CHAT</span>
@@ -233,7 +262,7 @@ export default function Livestreaming() {
           {chatMesssages.map((message, index) => (
             <LivestreamChatMessage
               key={index}
-              time={new Date(message.time)}
+              time={format(new Date(message.time), "HH:mm:ss")}
               message={message.message}
               sender={message.sender}
               type={message.type}

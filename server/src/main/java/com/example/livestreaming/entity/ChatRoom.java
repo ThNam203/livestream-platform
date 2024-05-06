@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -18,6 +18,8 @@ public class ChatRoom {
     public Integer roomId;
     public String roomName;
     public Integer adminId;
+    public String admin;
     public List<Integer> userIds;
     public List<ChatMessage> messages;
+    public Date timeStart;
 }

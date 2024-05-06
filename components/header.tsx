@@ -70,7 +70,7 @@ export const Header = () => {
             iconAfter={<Podcast size={16} />}
             className="bg-primary hover:bg-secondary text-white"
             onClick={() => {
-              setCookie("goStreaming", JSON.stringify(true));
+              setCookie("isStreaming", JSON.stringify(true));
               router.push("/livestreaming");
             }}
           />

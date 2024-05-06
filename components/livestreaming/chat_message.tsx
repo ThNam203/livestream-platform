@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { getColorByMiliseconds } from "@/utils/func";
+import { formatTime, getColorBySeconds } from "@/utils/func";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ export const LivestreamChatMessage = ({
   sender,
   type = "CHAT",
 }: {
-  time: Date;
+  time: string;
   sender: string;
   message: string;
   type: "JOIN" | "LEAVE" | "CHAT";
@@ -24,18 +24,15 @@ const DefaultMessage = ({
   message,
   sender,
 }: {
-  time: Date;
+  time: string;
   sender: string;
   message: string;
 }) => {
-  const [_time, setTime] = useState(
-    time.getHours() >= 1 ? format(time, "hh:MM:ss") : format(time, "MM:ss")
-  );
   return (
     <div className="flex flex-row items-center gap-2 px-2 cursor-pointer">
-      <span className="text-secondaryWord">{_time}</span>
+      <span className="text-secondaryWord">{time}</span>
       <span
-        className={cn("font-bold", getColorByMiliseconds(time.getSeconds()))}
+        className={cn("font-bold", getColorBySeconds(new Date().getSeconds()))}
       >
         {sender}:
       </span>
@@ -44,12 +41,12 @@ const DefaultMessage = ({
   );
 };
 
-const JoinMessage = ({ time, message }: { time: Date; message: string }) => {
+const JoinMessage = ({ time, message }: { time: string; message: string }) => {
   return (
     <div className="flex flex-row items-center gap-2 px-2 text-secondaryWord cursor-pointer rounded-md">
-      <span className="text-secondaryWord">{format(time, "hh:MM:ss")}</span>
+      <span className="text-secondaryWord">{time}</span>
       <span
-        className={cn("font-bold", getColorByMiliseconds(time.getSeconds()))}
+        className={cn("font-bold", getColorBySeconds(new Date().getSeconds()))}
       >
         {message}
       </span>
@@ -57,12 +54,12 @@ const JoinMessage = ({ time, message }: { time: Date; message: string }) => {
   );
 };
 
-const LeaveMessage = ({ time, message }: { time: Date; message: string }) => {
+const LeaveMessage = ({ time, message }: { time: string; message: string }) => {
   return (
     <div className="flex flex-row items-center gap-2 px-2 text-red-500 cursor-pointer rounded-md">
-      <span className="text-secondaryWord">{format(time, "hh:MM:ss")}</span>
+      <span className="text-secondaryWord">{time}</span>
       <span
-        className={cn("font-bold", getColorByMiliseconds(time.getSeconds()))}
+        className={cn("font-bold", getColorBySeconds(new Date().getSeconds()))}
       >
         {message}
       </span>

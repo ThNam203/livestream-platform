@@ -70,10 +70,10 @@ type FnControl = {
 export function StreamingFrame({
   videoInfo,
   className,
-  onVideoPlay,
+  onVideoStart,
 }: {
   videoInfo: VideoInfo;
-  onVideoPlay?: (currentTime: number) => void;
+  onVideoStart?: () => void;
   className?: ClassValue;
 }) {
   const ref: LegacyRef<ReactPlayer> = useRef(null);
@@ -110,6 +110,7 @@ export function StreamingFrame({
 
   const playVideo = () => {
     setIsPlaying(true);
+    if (onVideoStart && currentTime === 0) onVideoStart();
   };
 
   const pauseVideo = () => {
@@ -166,7 +167,7 @@ export function StreamingFrame({
         }}
       >
         <ReactPlayerWrapper
-          playerRef={ref}
+          playerref={ref}
           url={videoInfo.videoUrl}
           onReady={() => setIsLoading(false)}
           muted={config.volumeValue === 0 ? true : false}
@@ -181,7 +182,6 @@ export function StreamingFrame({
 
             setLoaded(state.loaded);
             setCurrentTime(state.playedSeconds);
-            onVideoPlay && onVideoPlay(state.playedSeconds);
           }}
           onDuration={(duration) => {
             setDuration(duration);

@@ -15,6 +15,7 @@ import { ReactNode } from "react";
 import streaming_img from "../public/images/live_user_zackrawrr-440x248.jpg";
 import { socket_chat } from "@/socket_chat";
 import { useRouter } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const ContentView = ({
   title,
@@ -113,12 +114,7 @@ const LiveChannelListView = ({
             viewers={120}
             category={streaming.category}
             onClick={() => {
-              socket_chat.emit("join", {
-                roomId: streaming.id,
-                senderId: user ? user.id : 0,
-                sender: user ? user.username : "",
-              });
-
+              setCookie("isStreaming", JSON.stringify(false));
               router.push(`/livestreaming`);
             }}
           />
