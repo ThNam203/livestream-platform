@@ -61,11 +61,9 @@ export default function Livestreaming() {
         .catch((err) => showErrorToast(err));
     };
     fetchData();
-    console.log("render");
   }, []);
 
   useEffect(() => {
-    console.log("thisUser change");
     if (!thisUser) return;
     socket_chat.connect();
     socket_chat.on("connect", () => {
@@ -123,7 +121,6 @@ export default function Livestreaming() {
       type: mes.type,
     };
 
-    console.log("newMessage: ", newMessage);
     addMessage(newMessage);
   });
 
@@ -135,8 +132,6 @@ export default function Livestreaming() {
       time: mes.time,
       type: mes.type,
     }));
-
-    console.log("newMessages: ", newMessages);
 
     addMessages(newMessages);
   });
@@ -215,8 +210,6 @@ export default function Livestreaming() {
   const getTimeBaseOnVideo = (timeUserChat: Date, timeVideoStart: Date) => {
     const timeChat = timeUserChat.getTime() / 1000;
     const timeStart = timeVideoStart.getTime() / 1000;
-    console.log("timeChat: ", timeChat);
-    console.log("timeStart: ", timeStart);
     return Math.floor(timeChat - timeStart);
   };
 
@@ -240,10 +233,6 @@ export default function Livestreaming() {
     socket_chat.emit("message", newMessage);
     setChatMessage("");
   };
-
-  useEffect(() => {
-    console.log("time start: ", timeVideoStart);
-  }, [timeVideoStart]);
 
   return (
     <div className="w-full h-full overflow-hidden">

@@ -65,12 +65,12 @@ public class BeanConfig {
                     hmSocketRoom.put(socket.getId(), newRoom.roomId);
 
                     //send the time this room was created
-                    socket.send("timeStart", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().time(newRoom.timeStart).message("This is the time created").type(MessageType.JOIN).build())));
+                    socket.send("timeStart", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().roomId(req.roomId).sender("server").time(newRoom.timeStart).message("This is the time created").type(MessageType.JOIN).build())));
 
                     //join socket to room and send first message
                     socket.joinRoom(req.roomId.toString());
-                    socket.send("message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().time(new Date()).message("You created the chat room.").type(MessageType.JOIN).build())));
-                    ChatMessage firstMessage = ChatMessage.builder().time(new Date()).message(req.sender + " created the chat room.").type(MessageType.JOIN).build();
+                    socket.send("message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().roomId(req.roomId).sender("server").time(new Date()).message("You created the chat room.").type(MessageType.JOIN).build())));
+                    ChatMessage firstMessage = ChatMessage.builder().roomId(req.roomId).sender("server").time(new Date()).message(req.sender + " created the chat room.").type(MessageType.JOIN).build();
                     saveMessage(chatRooms, req.roomId, firstMessage);
                 }
                 else
@@ -104,12 +104,15 @@ public class BeanConfig {
                     socket.send("messages", jsonArray);
 
                     //send the time this room was created
-                    socket.send("timeStart", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().time(timeStart).message("This is the time created").type(MessageType.JOIN).build())));
+                    socket.send("timeStart", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().roomId(req.roomId).sender("server").time(timeStart).message("This is the time created").type(MessageType.JOIN).build())));
 
                     //join socket to room and send message to others when new user joined
-                    socket.send("message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().time(new Date()).message("You joined the chat room.").type(MessageType.JOIN).build())));
+                    socket.send("message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().roomId(req.roomId).sender("server").time(new Date()).message("You joined the chat room.").type(MessageType.JOIN).build())));
                     socket.joinRoom(req.roomId.toString());
-                    socket.broadcast(req.roomId.toString(),"message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().time(new Date()).message(req.sender + " joined the chat room.").type(MessageType.JOIN).build())));
+                    ChatMessage message = ChatMessage.builder().roomId(req.roomId).sender("server").time(new Date()).message(req.sender + " joined the chat room.").type(MessageType.JOIN).build();
+                    socket.broadcast(req.roomId.toString(),"message", Json.toJsonObj(ChatMapper.toChatMessageDTO(message)));
+                    saveMessage(chatRooms,req.roomId,message);
+
                 }
             });
 
@@ -135,7 +138,7 @@ public class BeanConfig {
                         chatRooms.remove(room);
                     }
                 });
-                socket.broadcast(roomId.toString(),"message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().time(new Date()).message(username + " left the chat room.").type(MessageType.LEAVE).build())));
+                socket.broadcast(roomId.toString(),"message", Json.toJsonObj(ChatMapper.toChatMessageDTO(ChatMessage.builder().roomId(roomId).sender("server").time(new Date()).message(username + " left the chat room.").type(MessageType.LEAVE).build())));
             });
 
             socket.on("message", args1 -> {

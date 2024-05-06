@@ -117,19 +117,16 @@ export const Header = () => {
                 <Separate classname="my-2" />
                 <DefaultOption
                   content={
-                    <div className="flex flex-row gap-2 items-center ">
+                    <div className="flex flex-row gap-2 items-center text-red-500">
                       <LogoutIcon />
                       <span className="text-xs">Log Out</span>
                     </div>
                   }
                   onClick={async () => {
-                    const token = getCookie("token");
-                    if (!token) return;
-                    await AuthService.LogOut(token.toString())
+                    await AuthService.LogOut()
                       .then(() => {
-                        setCookie("token", "");
-                        router.push("/login");
                         showSuccessToast("Log out successfully");
+                        router.push("/login");
                       })
                       .catch((err) => {
                         showErrorToast("Log out failed");

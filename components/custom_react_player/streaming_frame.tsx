@@ -500,12 +500,22 @@ const Combobox = ({
     if (onChange) onChange(value);
     setShowOptions(false);
   };
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleClick = (e: any) => {
+    if (ref.current && !ref.current.contains(e.target)) {
+      setShowOptions(false);
+    } else setShowOptions(!showOptions);
+  };
 
   return (
-    <div className="relative flex flex-row items-center justify-center gap-4 cursor-pointer">
+    <div
+      ref={ref}
+      className="relative flex flex-row items-center justify-center gap-4 cursor-pointer"
+    >
       <div
         className={cn("text-white cursor-pointer")}
-        onClick={() => setShowOptions(!showOptions)}
+        onClick={(e: any) => handleClick(e)}
       >
         {value}
       </div>
