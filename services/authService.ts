@@ -26,11 +26,8 @@ const Login = (data: LoginFormData) => {
   );
 };
 
-const LogOut = (token: string) => {
+const LogOut = () => {
   return AxiosService.get("/auth/logout", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     withCredentials: true,
   });
 };

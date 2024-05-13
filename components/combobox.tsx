@@ -49,13 +49,12 @@ const Option = ({
 };
 
 const Combobox = ({
-  id,
   selectedOption,
   className,
   popoverContent,
   popoverPosition = "bottom",
+  hasArrowAfter = true,
 }: {
-  id?: string;
   selectedOption: string;
   popoverContent?: ReactNode;
   popoverPosition?:
@@ -72,6 +71,7 @@ const Combobox = ({
     | "right-start"
     | "right-end";
   className?: ClassValue;
+  hasArrowAfter?: boolean;
 }) => {
   const [showPopover, setShowPopover] = useState(false);
 
@@ -82,22 +82,22 @@ const Combobox = ({
       placement={popoverPosition}
       showArrow={true}
     >
-      <PopoverTrigger>
+      <PopoverTrigger onAnimationStart={(e) => e.preventDefault()}>
         <div className={cn("relative flex flex-row items-center")}>
-          <button
+          <div
             className={cn(
-              "min-h-8 border-0 outline outline-1 outline-black rounded py-1 pl-3 pr-10 focus:outline-4 focus:outline-primary text-nowrap bg-white",
+              "min-h-8 border-0 outline outline-1 outline-black rounded py-1 pl-3 pr-10 text-nowrap bg-white",
+              showPopover ? "outline-4 outline-primary" : "",
               className
             )}
           >
             {selectedOption}
-          </button>
-          <label
-            htmlFor={id}
-            className="absolute end-2 cursor-pointer font-normal"
-          >
-            {showPopover ? <ChevronUp /> : <ChevronDown />}
-          </label>
+          </div>
+          {hasArrowAfter && (
+            <span className="absolute end-2 cursor-pointer font-normal">
+              {showPopover ? <ChevronUp /> : <ChevronDown />}
+            </span>
+          )}
         </div>
       </PopoverTrigger>
       <PopoverContent className="p-2 rounded-md bg-white shadow-primaryShadow">

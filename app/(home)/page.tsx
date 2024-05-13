@@ -16,8 +16,10 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col p-8">
-      <div className="h-[350px] w-full">{/* <Carousel /> */}</div>
+    <div className="flex flex-col w-full max-h-full p-8 overflow-y-scroll overflow-x-hidden">
+      <div className="h-[600px] w-[300px] bg-red-300">
+        {/* <Carousel />  */}
+      </div>
       <RecommendStreamingView
         title={
           <span>

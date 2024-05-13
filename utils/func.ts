@@ -1,3 +1,4 @@
+import { ClassValue } from "clsx";
 import { format } from "date-fns";
 
 export const formatTime = (seconds: number) => {

@@ -1,12 +1,12 @@
 "use client";
 
-import { StreamingPage } from "@/components/custom_react_player/streaming_frame";
+import { StreamingFrame } from "@/components/custom_react_player/streaming_frame";
 import Image from "next/image";
 
 export default function ViewerScreen() {
   return (
     <>
-    <StreamingPage videoInfo={{
+    <StreamingFrame videoInfo={{
       videoUrl: "http://10.0.140.95:8080/output_stream35/index.m3u8",
       videoTitle: "Cat playing NIKKE",
       streamer: {

@@ -13,6 +13,7 @@ import { ZodType, z } from "zod";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/auth";
 import { setCookie } from "cookies-next";
+import { setProfile } from "@/redux/slices/profile";
 
 export type LoginFormData = {
   username: string;
@@ -41,9 +42,8 @@ export default function LoginPage() {
     setIsLoggingIn(true);
     await AuthService.Login(data)
       .then((res) => {
-        const token = res.data.token;
-        setCookie("token", token);
-        dispatch(login());
+        console.log("result", res.data);
+        dispatch(setProfile(res.data.user));
         showSuccessToast("Login Successfully");
         router.push("/");
       })

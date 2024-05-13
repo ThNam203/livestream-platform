@@ -10,19 +10,13 @@ import {
   VolumeUp,
 } from "@mui/icons-material";
 import { Slider } from "@mui/material";
-import React, {
-  LegacyRef,
-  MutableRefObject,
-  forwardRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import screenfull from "screenfull";
-import { formatTime } from "../../utils/func";
-import { cn } from "../../utils/cn";
 import { ClassValue } from "clsx";
+import { LegacyRef, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
+import screenfull from "screenfull";
+import { cn } from "../../utils/cn";
+import { formatTime } from "../../utils/func";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import dynamic from "next/dynamic";
 const ReactPlayerWrapper = dynamic(() => import("./react_player_wrapper"), {
@@ -74,11 +68,20 @@ type FnControl = {
   handleResolutionChange: (value: string) => void;
 };
 
-export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
+export function StreamingFrame({
+  videoInfo,
+  className,
+  onVideoStart,
+}: {
+  videoInfo: VideoInfo;
+  onVideoStart?: () => void;
+  className?: ClassValue;
+}) {
   const ref: LegacyRef<ReactPlayer> = useRef(null);
   const [count, setCount] = useState(0); // for hide control bar
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // for loading spinner
   const [currentTime, setCurrentTime] = useState(0);
   const [loaded, setLoaded] = useState(0);
   const [config, setConfig] = useState<Config>({
@@ -109,6 +112,7 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
 
   const playVideo = () => {
     setIsPlaying(true);
+    if (onVideoStart && currentTime === 0) onVideoStart();
   };
 
   const pauseVideo = () => {
@@ -141,9 +145,9 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
     setConfig({ ...config, playbackRate: value });
   };
 
-  console.log("resolutions", resolutions)
+  console.log("resolutions", resolutions);
   const handleResolutionChange = (value: string) => {
-    console.log("resolutions in handleResolutionChange", resolutions)
+    console.log("resolutions in handleResolutionChange", resolutions);
     setConfig({ ...config, resolution: value });
     if (value === "Auto")
       ref.current!.getInternalPlayer("hls").currentLevel = -1;
@@ -413,7 +417,7 @@ function VideoControlButtons({
         </div>
         <VolumeButton onVolumeChange={fnControl.handleVolumeChange} />
         <span className="text-white">
-          {formatTime(currentTime)}/{formatTime(duration)}
+          {formatTime(currentTime)} / {formatTime(duration)}
         </span>
       </div>
 
@@ -429,7 +433,9 @@ function VideoControlButtons({
         />
 
         <Combobox
-          options={resolutions.map((res) => res === "Auto" ? "Auto" : RESOLUTION_TO_CLASS[res] + "p")}
+          options={resolutions.map((res) =>
+            res === "Auto" ? "Auto" : RESOLUTION_TO_CLASS[res] + "p"
+          )}
           value={config.resolution}
           onChange={fnControl.handleResolutionChange}
         />
@@ -515,12 +521,22 @@ const Combobox = ({
     if (onChange) onChange(value);
     setShowOptions(false);
   };
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleClick = (e: any) => {
+    if (ref.current && !ref.current.contains(e.target)) {
+      setShowOptions(false);
+    } else setShowOptions(!showOptions);
+  };
 
   return (
-    <div className="relative flex flex-row items-center justify-center gap-4 cursor-pointer">
+    <div
+      ref={ref}
+      className="relative flex flex-row items-center justify-center gap-4 cursor-pointer"
+    >
       <div
         className={cn("text-white cursor-pointer")}
-        onClick={() => setShowOptions(!showOptions)}
+        onClick={(e: any) => handleClick(e)}
       >
         {value}
       </div>

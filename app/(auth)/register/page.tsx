@@ -18,6 +18,7 @@ import { ZodType, z } from "zod";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/auth";
 import { setCookie } from "cookies-next";
+import { setProfile } from "@/redux/slices/profile";
 
 export type RegisterFormData = {
   username: string;
@@ -57,13 +58,13 @@ export default function RegisterPage() {
     setIsSigningUp(true);
     await AuthService.Register(data)
       .then((res) => {
-        const token = res.data.token;
-        setCookie("token", token);
         showSuccessToast("Sign Up Success");
+        dispatch(setProfile(res.data.user));
         router.push("/");
       })
       .catch((err) => {
-        showErrorToast(err.message);
+        console.log(err);
+        showErrorToast(err.response.data.message || "Sign Up Failed");
       })
       .finally(() => {
         setIsSigningUp(false);

@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "file")
 @SequenceGenerator(name = "id_seq", sequenceName = "id_seq", allocationSize = 1)
 @Builder
 @Data
