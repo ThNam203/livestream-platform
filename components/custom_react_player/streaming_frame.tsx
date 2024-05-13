@@ -29,18 +29,20 @@ const ReactPlayerWrapper = dynamic(() => import("./react_player_wrapper"), {
   ssr: false,
 });
 
+const RESOLUTION_TO_CLASS: { [key: string]: number } = {
+  "416x234": 240,
+  "640x360": 360,
+  "768x432": 480,
+  "960x540": 576,
+  "1280x720": 720,
+  "1920x1080": 1080,
+};
+
 const playbackRates = {
   "0.5x": 0.5,
   "1x": 1.0,
   "1.5x": 1.5,
   "2x": 2.0,
-};
-
-const resolutions = {
-  "360p": 360,
-  "480p": 480,
-  "720p": 720,
-  "1080p": 1080,
 };
 
 export type VideoInfo = {
@@ -54,7 +56,7 @@ export type VideoInfo = {
 
 type Config = {
   playbackRate: number;
-  resolution: number;
+  resolution: string;
   volumeValue: number;
   isFullscreen: boolean;
   loop: boolean;
@@ -69,7 +71,7 @@ type FnControl = {
   onFullScreen: () => void;
   onExitFullScreen: () => void;
   handlePlaybackRateChange: (value: number) => void;
-  handleResolutionChange: (value: number) => void;
+  handleResolutionChange: (value: string) => void;
 };
 
 export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
@@ -81,12 +83,13 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
   const [loaded, setLoaded] = useState(0);
   const [config, setConfig] = useState<Config>({
     playbackRate: 1.0,
-    resolution: 720,
+    resolution: "Auto",
     volumeValue: 100,
     isFullscreen: false,
     loop: false,
     pip: false, // Picture in Picture (the browser support this feature, not need to make it true)
   });
+  const [resolutions, setResolutions] = useState<string[]>([]);
 
   const [fnControl, setFnControl] = useState<FnControl>({
     playVideo: () => playVideo(),
@@ -97,7 +100,7 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
     onExitFullScreen: () => onExitFullScreen(),
     handlePlaybackRateChange: (value: number) =>
       handlePlaybackRateChange(value),
-    handleResolutionChange: (value: number) => handleResolutionChange(value),
+    handleResolutionChange: (value: string) => handleResolutionChange(value),
   });
 
   const handleVolumeChange = (value: number) => {
@@ -113,7 +116,6 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
   };
 
   const seekToTime = (time: number) => {
-    console.log("ref", ref);
     if (ref.current) {
       setCurrentTime(time);
       ref.current.seekTo(time);
@@ -139,8 +141,23 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
     setConfig({ ...config, playbackRate: value });
   };
 
-  const handleResolutionChange = (value: number) => {
+  console.log("resolutions", resolutions)
+  const handleResolutionChange = (value: string) => {
+    console.log("resolutions in handleResolutionChange", resolutions)
     setConfig({ ...config, resolution: value });
+    if (value === "Auto")
+      ref.current!.getInternalPlayer("hls").currentLevel = -1;
+    else {
+      const levelIndex = resolutions.findIndex((reso) => {
+        console.log(
+          "levelIndex",
+          parseInt(value.replace("p", "")),
+          RESOLUTION_TO_CLASS[reso]
+        );
+        return parseInt(value.replace("p", "")) === RESOLUTION_TO_CLASS[reso];
+      });
+      ref.current!.getInternalPlayer("hls").currentLevel = levelIndex;
+    }
   };
 
   return (
@@ -166,12 +183,20 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
         loop={config.loop}
         onProgress={(state) => {
           setCount(count + 1);
-
           setLoaded(state.loaded);
           setCurrentTime(state.playedSeconds);
         }}
         onDuration={(duration) => {
           setDuration(duration);
+        }}
+        config={{ file: { forceHLS: true } }}
+        onReady={() => {
+          setResolutions([
+            "Auto",
+            ...ref.current
+              ?.getInternalPlayer("hls")
+              .levels.map((level: any) => level.attrs.RESOLUTION),
+          ]);
         }}
       />
       <FrontOfVideo
@@ -182,6 +207,7 @@ export function StreamingPage({ videoInfo }: { videoInfo: VideoInfo }) {
         fnControl={fnControl}
         duration={duration}
         videoInfo={videoInfo}
+        resolutions={resolutions}
         className={count > 3 ? "opacity-0" : "opacity-100"}
       />
     </div>
@@ -196,6 +222,7 @@ function FrontOfVideo({
   fnControl,
   duration,
   videoInfo,
+  resolutions,
   className,
 }: {
   isPlaying: boolean;
@@ -205,6 +232,7 @@ function FrontOfVideo({
   fnControl: FnControl;
   duration: number;
   videoInfo: VideoInfo;
+  resolutions: string[];
   className?: ClassValue;
 }) {
   return (
@@ -246,6 +274,7 @@ function FrontOfVideo({
         loaded={loaded}
         config={config}
         fnControl={fnControl}
+        resolutions={resolutions}
         duration={duration}
       />
     </div>
@@ -259,6 +288,7 @@ function VideoControl({
   config,
   fnControl,
   duration,
+  resolutions,
   className,
 }: {
   isPlaying: boolean;
@@ -267,6 +297,7 @@ function VideoControl({
   config: Config;
   fnControl: FnControl;
   duration: number;
+  resolutions: string[];
   className?: ClassValue;
 }) {
   return (
@@ -292,6 +323,7 @@ function VideoControl({
         duration={duration}
         config={config}
         fnControl={fnControl}
+        resolutions={resolutions}
       />
     </div>
   );
@@ -340,6 +372,7 @@ function VideoControlButtons({
   duration,
   config,
   fnControl,
+  resolutions,
 }: {
   className?: ClassValue;
   isPlaying: boolean;
@@ -347,6 +380,7 @@ function VideoControlButtons({
   duration: number;
   config: Config;
   fnControl: FnControl;
+  resolutions: string[];
 }) {
   return (
     <div
@@ -395,13 +429,9 @@ function VideoControlButtons({
         />
 
         <Combobox
-          options={Object.keys(resolutions)}
-          value={config.resolution + "p"}
-          onChange={(value: string) =>
-            fnControl.handleResolutionChange(
-              resolutions[value as keyof typeof resolutions]
-            )
-          }
+          options={resolutions.map((res) => res === "Auto" ? "Auto" : RESOLUTION_TO_CLASS[res] + "p")}
+          value={config.resolution}
+          onChange={fnControl.handleResolutionChange}
         />
 
         <div

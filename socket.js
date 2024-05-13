@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // "undefined" means the URL will be computed from the `window.location` object
-const URL = "http://127.0.0.1:443";
+const URL = "http://192.168.93.130:8888";
 const socket = io(URL, {
   withCredentials: true,
   transports: ["websocket"],
