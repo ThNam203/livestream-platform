@@ -7,11 +7,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="h-screen w-full overflow-hidden">
+    <div className="h-screen w-screen overflow-hidden">
       <Header />
       <div className="w-full h-[calc(100%-48px)] flex flex-row">
         <LeftBar />
-        <div className="h-full w-full ml-64">{children}</div>
+        <div className="h-full w-full xl:ml-64 max-xl:ml-12">{children}</div>
       </div>
     </div>
   );

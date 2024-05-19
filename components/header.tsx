@@ -2,6 +2,9 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import {
   Bell,
+  Copy,
+  Heart,
+  Home,
   MessageSquare,
   MoreVertical,
   Podcast,
@@ -42,24 +45,27 @@ export const Header = () => {
 
   return (
     <nav className="w-full h-12 flex flex-row items-center justify-between text-xl font-semibold text-primaryWord bg-white px-4 py-2 shadow z-[49]">
-      <div className="flex flex-row gap-10">
+      <div className="flex flex-row md:gap-10 max-md:gap-4 items-center">
         <Link href="/" className="hover:text-primary">
-          Home
+          <span className="max-md:hidden">Home</span>
+          <Home size={20} className="md:hidden" />
         </Link>
         <Link href="/following" className="hover:text-primary">
-          Following
+          <span className="max-md:hidden">Following</span>
+          <Heart size={20} className="md:hidden" />
         </Link>
         <Link href="/browse" className="hover:text-primary">
-          Browse
+          <span className="max-md:hidden">Browse</span>
+          <Copy size={20} className="md:hidden" />
         </Link>
         <IconButton icon={<MoreVertical />} />
       </div>
 
-      <div>
+      <div className="lg:w-[400px] max-lg:w mx-2">
         <SearchInput
           id="search-input"
           placeholder="Search"
-          className="text-base w-[400px]"
+          className="text-base w-full"
         />
       </div>
 
@@ -146,10 +152,11 @@ export const Header = () => {
             onClick={() => {
               router.push("/login");
             }}
+            className="whitespace-nowrap"
           />
           <TextButton
             content="Sign Up"
-            className="text-white bg-primary hover:bg-primary/80"
+            className="text-white bg-primary hover:bg-primary/80 whitespace-nowrap"
             onClick={() => {
               router.push("/register");
             }}

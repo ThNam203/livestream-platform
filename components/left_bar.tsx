@@ -1,4 +1,4 @@
-import { ArrowLeftFromLine, ArrowUpDown } from "lucide-react";
+import { ArrowLeftFromLine, ArrowUpDown, Heart, Video } from "lucide-react";
 import { IconButton, RoundedImageButton } from "./buttons";
 import { ClassValue } from "clsx";
 import { cn } from "@/utils/cn";
@@ -19,18 +19,18 @@ const ChannelViewItem = ({
   return (
     <div
       className={cn(
-        "w-full flex flex-row gap-2 items-center justify-between hover:bg-hoverColor px-2",
+        "w-full flex flex-row gap-2 items-center justify-between xl:hover:bg-hoverColor px-2",
         className
       )}
     >
       <div className="flex flex-row items-center justify-start">
         <RoundedImageButton />
-        <div className="flex flex-col gap-1 ml-2">
+        <div className="flex flex-col gap-1 ml-2 max-xl:hidden">
           <span className="font-semibold text-sm">{name}</span>
           <span className="text-secondaryWord text-sm">{category}</span>
         </div>
       </div>
-      <View viewers={1200} />
+      <View viewers={1200} className="max-xl:hidden" />
     </div>
   );
 };
@@ -65,16 +65,15 @@ const recommendChannels: Channel[] = [channels[1], channels[2], channels[3]];
 
 export const LeftBar = () => {
   return (
-    <div className="fixed h-full w-64 bg-leftBarColor flex flex-col gap-2 py-2 text-primaryWord">
+    <div className="fixed h-full xl:w-64 max-xl:w-fit bg-leftBarColor flex flex-col max-xl:items-center justify-start gap-2 py-2 text-primaryWord">
       <div className="flex flex-row justify-between items-center px-2">
-        <span className="font-semibold text-lg">For you</span>
+        <span className="font-semibold text-lg max-xl:hidden">For you</span>
       </div>
       <div className="flex flex-row justify-between items-center px-2 mt-2">
-        <span className="font-semibold text-sm text-secondaryWord">
-          FOLLOWED CHANNELS
-        </span>
+        <Title icon={<Heart size={20} />}>FOLLOWED CHANNELS</Title>
+
         <IconButton
-          className="self-end"
+          className="self-end max-xl:hidden"
           icon={<ArrowUpDown size={18} />}
           disabled={true}
         />
@@ -90,9 +89,7 @@ export const LeftBar = () => {
         );
       })}
       <div className="flex flex-row justify-between items-center px-2 mt-2">
-        <span className="font-semibold text-sm text-secondaryWord">
-          RECOMMEND CHANNELS
-        </span>
+        <Title icon={<Video size={20} />}>RECOMMEND CHANNELS</Title>
       </div>
       {recommendChannels.map((channel, idx) => {
         const user = userData.find((user) => user.id === channel.ownerId);
@@ -105,5 +102,24 @@ export const LeftBar = () => {
         );
       })}
     </div>
+  );
+};
+
+const Title = ({
+  children,
+  icon,
+}: {
+  children: ReactNode;
+  icon: ReactNode;
+}) => {
+  return (
+    <>
+      <span className="font-semibold text-sm text-secondaryWord max-xl:hidden">
+        {children}
+      </span>
+      <span className="font-semibold text-sm text-secondaryWord xl:hidden">
+        {icon}
+      </span>
+    </>
   );
 };

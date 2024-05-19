@@ -94,7 +94,7 @@ const CategoryListView = ({
   return (
     <div
       className={cn(
-        "w-full grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-2 gap-6",
+        "w-full grid xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-6",
         className
       )}
     >
@@ -143,9 +143,9 @@ export default function BrowsePage() {
   const [tagFilter, setTagFilter] = useState<string>("");
 
   return (
-    <div className="flex flex-col p-8 h-full overflow-y-scroll">
+    <div className="w-full flex flex-col p-8 h-full overflow-y-scroll">
       <h1 className="text-5xl font-bold">Browse</h1>
-      <div className="mt-6 w-full flex flex-row items-center justify-between gap-2">
+      <div className="mt-6 w-full lg:flex lg:flex-row max-lg:grid max-lg:grid-cols-3 max-lg:gap-8 max-md:grid-cols-2 max-sm:grid-cols-1 items-center justify-start gap-2">
         {browses.map((browse, idx) => (
           <BrowseItem key={idx} title={browse.title} icon={browse.icon} />
         ))}
@@ -170,12 +170,12 @@ export default function BrowsePage() {
         selectedTab={selectedTab}
         content={
           <div>
-            <div className="flex flex-row justify-between items-center mt-8">
+            <div className="flex sm:flex-row max-sm:flex-col max-sm:gap-2 max-sm:items-start sm:justify-between items-center mt-8">
               <div className="flex flex-row items-center gap-4">
                 <SearchInput
                   id="search-input"
                   placeholder="Search Category Tags"
-                  className="text-sm w-[250px] pr-2"
+                  className="text-sm w-[250px] max-sm:w-full pr-2"
                   popoverPosition="bottom-start"
                   popoverContent={
                     <div className="flex flex-col">
@@ -208,7 +208,7 @@ export default function BrowsePage() {
                 </span>
               </div>
               <div className="flex flex-row items-center gap-4">
-                <span className="font-semibold text-sm text-black">
+                <span className="font-semibold text-sm text-black whitespace-nowrap">
                   Sort by
                 </span>
                 <Combobox

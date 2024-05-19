@@ -17,6 +17,7 @@ import screenfull from "screenfull";
 import { cn } from "../../utils/cn";
 import { formatTime } from "../../utils/func";
 import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton from "react-loading-skeleton";
 
 import dynamic from "next/dynamic";
 const ReactPlayerWrapper = dynamic(() => import("./react_player_wrapper"), {
@@ -81,7 +82,7 @@ export function StreamingFrame({
   const [count, setCount] = useState(0); // for hide control bar
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // for loading spinner
+  const [isLoading, setIsLoading] = useState(true); // for skeleton
   const [currentTime, setCurrentTime] = useState(0);
   const [loaded, setLoaded] = useState(0);
   const [config, setConfig] = useState<Config>({
@@ -145,7 +146,6 @@ export function StreamingFrame({
     setConfig({ ...config, playbackRate: value });
   };
 
-  console.log("resolutions", resolutions);
   const handleResolutionChange = (value: string) => {
     console.log("resolutions in handleResolutionChange", resolutions);
     setConfig({ ...config, resolution: value });
@@ -166,7 +166,7 @@ export function StreamingFrame({
 
   return (
     <div
-      className="w-[1024px] relative"
+      className="w-full h-full relative"
       id="frame"
       onMouseMove={() => {
         setCount(0);
@@ -175,6 +175,20 @@ export function StreamingFrame({
         setCount(0);
       }}
     >
+      {/* <div
+        className={cn(
+          "absolute top-0 w-full h-full z-30 bg-red-300",
+          isLoading ? "" : "hidden"
+        )}
+      >
+        <Skeleton
+          width="100%"
+          height="100%"
+          borderRadius="0"
+          className="absolute -top-1"
+        />
+      </div> */}
+      {/* <div className="w-full h-full bg-blue-300"></div> */}
       <ReactPlayerWrapper
         playerRef={ref}
         url={videoInfo.videoUrl}
@@ -197,12 +211,17 @@ export function StreamingFrame({
         onReady={() => {
           setResolutions([
             "Auto",
-            ...ref.current
-              ?.getInternalPlayer("hls")
-              .levels.map((level: any) => level.attrs.RESOLUTION),
+            ref.current
+              ? ref.current
+                  ?.getInternalPlayer("hls")
+                  .levels.map((level: any) => level.attrs.RESOLUTION)
+              : [],
           ]);
+          console.log("ready");
+          setIsLoading(false);
         }}
       />
+
       <FrontOfVideo
         isPlaying={isPlaying}
         currentTime={currentTime}

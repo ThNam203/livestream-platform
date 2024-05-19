@@ -57,7 +57,7 @@ const InputWithIcon = React.forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     return (
-      <div className="relative flex flex-col">
+      <div className="relative w-full flex flex-col">
         <label
           htmlFor={id}
           className={cn(
@@ -67,7 +67,7 @@ const InputWithIcon = React.forwardRef<HTMLInputElement, InputProps>(
         >
           {label}
         </label>
-        <div className="flex flex-row items-center border-0 outline outline-1 outline-black rounded py-1 px-3 focus-within:outline-4 focus-within:outline-primary">
+        <div className="flex flex-row items-center border-0 outline outline-1 outline-black rounded px-3 focus-within:outline-4 focus-within:outline-primary">
           {iconBefore}
           <input
             ref={ref}
@@ -128,7 +128,7 @@ const SearchInput = ({
             type={type}
             placeholder={placeholder}
             className={cn(
-              "border-0 outline outline-1 outline-black rounded py-1 px-10 focus:outline-4 focus:outline-primary",
+              "border-0 outline outline-1 outline-black rounded py-1 pl-10 pr-2 focus:outline-4 focus:outline-primary",
               className
             )}
           />

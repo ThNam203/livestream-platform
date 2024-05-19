@@ -181,7 +181,10 @@ export default function Livestreaming() {
         mimeType: "video/webm",
       });
 
-      socket.emit("config_rtmpDestination", "rtmp://10.45.131.204/output_stream35/index.m3u8");
+      socket.emit(
+        "config_rtmpDestination",
+        "rtmp://192.168.1.6/output_stream35/index.m3u8"
+      );
       socket.emit("start", "start");
 
       recorder.ondataavailable = (event) => {
@@ -203,8 +206,7 @@ export default function Livestreaming() {
     streamer: {
       name: "Streamer",
     },
-    videoUrl:
-      "http://10.45.131.204:8888/output_stream35/index.m3u8",
+    videoUrl: "https://www.youtube.com/watch?v=v8_72ciDOhc",
   };
 
   const getTimeBaseOnVideo = (timeUserChat: Date, timeVideoStart: Date) => {
@@ -235,15 +237,16 @@ export default function Livestreaming() {
   };
 
   return (
-    <div className="w-full h-full overflow-hidden">
-      <StreamingFrame
-        videoInfo={videoInfo}
-        onVideoStart={() => {
-          setTimeVideoStart(new Date());
-        }}
-        className="w-[calc(100%-400px)]"
-      />
-      <div className="fixed top-12 right-0 bottom-0 w-[400px] font-sans border-l flex flex-col justify-between">
+    <div className="w-full h-full overflow-hidden flex lg:flex-row max-lg:flex-col">
+      <div className="w-full h-[40vw] max-lg:shrink-0">
+        <StreamingFrame
+          videoInfo={videoInfo}
+          onVideoStart={() => {
+            setTimeVideoStart(new Date());
+          }}
+        />
+      </div>
+      <div className="lg:w-[400px] max-lg:w-full h-full font-sans border-l flex flex-col justify-between">
         <div className="w-full flex flex-row justify-center mx-2 py-4 border-y">
           <span className="font-semibold text-primaryWord">STREAM CHAT</span>
         </div>
@@ -258,7 +261,7 @@ export default function Livestreaming() {
             />
           ))}
         </div>
-        <div className="w-full flex flex-col px-2">
+        <div className="w-full flex lg:flex-col max-lg:flex-row gap-2 max-lg:items-center px-2 py-2">
           <InputWithIcon
             className="py-2"
             placeholder="Send your message"
@@ -272,7 +275,7 @@ export default function Livestreaming() {
             }}
           />
 
-          <div className="flex flex-row justify-end py-2">
+          <div className="flex flex-row justify-end my-auto">
             <TextButton
               className="px-4 text-sm bg-primary text-white hover:bg-secondary ease-linear duration-100"
               content="Chat"

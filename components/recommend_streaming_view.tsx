@@ -102,7 +102,7 @@ const LiveChannelListView = ({
   const router = useRouter();
   const streamingData = streamings.slice(0, limitView);
   return (
-    <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4">
+    <div className="w-full grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 max-sm:grid-cols-1 gap-4">
       {streamingData.map((streaming, idx) => {
         const user = users.find((user) => user.id === streaming.ownerId);
         return (
@@ -136,7 +136,7 @@ const RecommendStreamingView = ({
   separate: ReactNode;
 }) => {
   return (
-    <div className="flex flex-col gap-2 mt-8">
+    <div className="flex flex-col gap-2 mt-8 pr-2">
       <div className="font-semibold text-lg">{title}</div>
       <LiveChannelListView limitView={limitView} streamings={streamings} />
       {separate}
