@@ -3,7 +3,7 @@ import { cn } from "@/utils/cn";
 import { ClassValue } from "clsx";
 import Image from "next/image";
 import React, { ReactNode } from "react";
-import mrbeast_img from "../public/images/mrbeast.jpg";
+import mrbeast_img from "../../public/images/mrbeast.jpg";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
@@ -47,7 +47,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 IconButton.displayName = "IconButton";
 
 const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>(
-  ({ className, content, iconBefore, iconAfter, ...props }, ref) => {
+  ({ className, content, iconBefore, iconAfter, children, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -59,6 +59,7 @@ const TextButton = React.forwardRef<HTMLButtonElement, TextButtonProps>(
       >
         {iconBefore}
         {content}
+        {children}
         {iconAfter}
       </button>
     );

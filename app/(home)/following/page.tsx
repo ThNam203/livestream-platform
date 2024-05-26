@@ -6,20 +6,20 @@ import esports_svg from "../../../public/images/esports.svg";
 import irl_svg from "../../../public/images/irl.svg";
 import music_svg from "../../../public/images/music.svg";
 import Image from "next/image";
-import { Tab, TabContent } from "@/components/tab";
-import { SearchInput } from "@/components/input";
-import { Combobox, Option } from "@/components/combobox";
+import { Tab, TabContent } from "@/components/ui/tab";
+import { SearchInput } from "@/components/ui/input";
+import { Combobox, Option } from "@/components/ui/combobox";
 import { ArrowDownWideNarrow, ChevronDown, Sparkles, X } from "lucide-react";
 import { categories } from "@/fakedata/browse";
 import { cn } from "@/utils/cn";
 import { streamings } from "@/fakedata/leftbar";
-import { CustomLink, Hover3DBox } from "@/components/hover_3d_box";
-import { TagButton } from "@/components/buttons";
+import { CustomLink, Hover3DBox } from "@/components/ui/hover_3d_box";
+import { TagButton } from "@/components/ui/buttons";
 import { ClassValue } from "clsx";
 import { Streaming } from "@/entities/channel";
 import amongus_img from "../../../public/images/amongus.jpg";
-import { RecommendStreamingView } from "@/components/recommend_streaming_view";
-import { Separate } from "@/components/separate";
+import { RecommendStreamingView } from "@/components/ui/recommend_streaming_view";
+import { Separate } from "@/components/ui/separate";
 
 const BrowseItem = ({ title, icon }: { title: string; icon: any }) => {
   return (

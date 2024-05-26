@@ -35,13 +35,13 @@ export const Header = () => {
     const fetchData = async () => {
       await UserService.getInfo()
         .then((res) => {
-          setProfile(res.data);
-          setThisUser(res.data);
+          setProfile(res);
+          setThisUser(res);
         })
         .catch((err) => showErrorToast(err));
     };
-    fetchData();
-  }, []);
+    if (!thisUser) fetchData();
+  }, [thisUser]);
 
   return (
     <nav className="w-full h-12 flex flex-row items-center justify-between text-xl font-semibold text-primaryWord bg-white px-4 py-2 shadow z-[49]">
@@ -92,7 +92,7 @@ export const Header = () => {
             <PopoverTrigger>
               <RoundedIconButton
                 className="bg-[#69ffc3]"
-                icon={<UserUI size={16} />}
+                icon={<UserUI size={16} strokeWidth={3} />}
               />
             </PopoverTrigger>
             <PopoverContent>
@@ -103,7 +103,7 @@ export const Header = () => {
                 <div className="flex flex-row gap-2 items-center">
                   <RoundedIconButton
                     className="bg-[#69ffc3] w-8 h-8"
-                    icon={<UserUI size={16} />}
+                    icon={<UserUI size={16} strokeWidth={3} />}
                   />
                   <span className="text-xs font-semibold">
                     {thisUser.username}
@@ -118,6 +118,9 @@ export const Header = () => {
                       <span className="text-xs">Setting</span>
                     </div>
                   }
+                  onClick={() => {
+                    router.push("/setting");
+                  }}
                 />
 
                 <Separate classname="my-2" />

@@ -22,7 +22,7 @@ const Tab = ({
   return (
     <span
       className={cn(
-        "underline underline-offset-8 decoration-2 hover:text-primary ease-linear duration-100 cursor-pointer",
+        "underline underline-offset-8 decoration-[1.5px] hover:text-primary ease-linear duration-100 cursor-pointer",
         selectedTab === content ? selectedTabStyle : defaultTabStyle,
         className
       )}

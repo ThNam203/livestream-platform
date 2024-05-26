@@ -6,13 +6,25 @@ export type User = {
   email: string;
   phoneNumber: string;
   password: string;
-  blockedUsers: number[];
-  // privateMessages
-  location: string;
-  createdDate: Date;
-  linkAccount: string;
-  followers: number[];
-  followings: number[];
-  backgroundPicture: string;
-  // activity: livestreamsParticipatedIn, comments, likes
+  birth: Date;
+  channel: Channel;
 };
+export type Channel = {
+  id: number;
+  title: string;
+  channelName: string;
+  tags: string[];
+  streamKey: string;
+};
+
+//some props will develop later
+
+// blockedUsers: number[];
+//   // privateMessages
+//   location: string;
+//   createdDate: Date;
+//   linkAccount: string;
+//   followers: number[];
+//   followings: number[];
+//   backgroundPicture: string;
+//   // activity: livestreamsParticipatedIn, comments, likes

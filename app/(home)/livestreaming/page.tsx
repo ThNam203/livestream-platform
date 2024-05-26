@@ -1,12 +1,12 @@
 "use client";
-import { IconButton, TextButton } from "@/components/buttons";
+import { IconButton, TextButton } from "@/components/ui/buttons";
 import {
   StreamingFrame,
   VideoInfo,
 } from "@/components/custom_react_player/streaming_frame";
-import { InputWithIcon } from "@/components/input";
+import { InputWithIcon } from "@/components/ui/input";
 import { LivestreamChatMessage } from "@/components/livestreaming/chat_message";
-import { showErrorToast } from "@/components/toast";
+import { showErrorToast } from "@/components/ui/toast";
 import { ChatMessageProps } from "@/entities/chatMessage";
 import { User } from "@/entities/user";
 import { useAppSelector } from "@/redux/hooks";

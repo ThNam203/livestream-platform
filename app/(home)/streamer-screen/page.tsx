@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import dynamic from "next/dynamic";
-import StreamerScreen from "@/components/streamer_screen";
+import StreamerScreen from "@/components/ui/streamer_screen";
 const ReactPlayer = dynamic(() => import("react-player/file"), { ssr: false });
 
 export default function LivestreamingDemo() {

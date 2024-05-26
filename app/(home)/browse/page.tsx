@@ -6,19 +6,20 @@ import esports_svg from "../../../public/images/esports.svg";
 import irl_svg from "../../../public/images/irl.svg";
 import music_svg from "../../../public/images/music.svg";
 import Image from "next/image";
-import { Tab, TabContent } from "@/components/tab";
-import { SearchInput } from "@/components/input";
-import { Combobox, Option } from "@/components/combobox";
+import { Tab, TabContent } from "@/components/ui/tab";
+import { SearchInput } from "@/components/ui/input";
+import { Combobox, Option } from "@/components/ui/combobox";
 import { ArrowDownWideNarrow, Sparkles, X } from "lucide-react";
 import { categories } from "@/fakedata/browse";
 import { cn } from "@/utils/cn";
 import { streamings } from "@/fakedata/leftbar";
-import { Hover3DBox } from "@/components/hover_3d_box";
-import { TagButton } from "@/components/buttons";
+import { Hover3DBox } from "@/components/ui/hover_3d_box";
+import { TagButton } from "@/components/ui/buttons";
 import { ClassValue } from "clsx";
 import { Streaming } from "@/entities/channel";
 import amongus_img from "../../../public/images/amongus.jpg";
-import { DefaultOption } from "@/components/option";
+import { DefaultOption } from "@/components/ui/option";
+import Tag from "@/components/ui/tag";
 
 const BrowseItem = ({ title, icon }: { title: string; icon: any }) => {
   return (
@@ -141,6 +142,9 @@ export default function BrowsePage() {
   const [openComboboxPopover, setOpenComboboxPopover] = useState(false);
   const [openSearchInputPopover, setOpenSearchInputPopover] = useState(false);
   const [tagFilter, setTagFilter] = useState<string>("");
+  const handleDeleteTag = () => {
+    setTagFilter("");
+  };
 
   return (
     <div className="w-full flex flex-col p-8 h-full overflow-y-scroll">
@@ -192,20 +196,12 @@ export default function BrowsePage() {
                   }
                 />
 
-                <span
-                  className={cn(
-                    "flex flex-row items-center gap-2 bg-gray-200 rounded-3xl px-3 py-1 text-secondaryWord font-semibold text-sm",
-                    tagFilter === "" ? "hidden" : ""
-                  )}
+                <Tag
+                  className={cn(tagFilter === "" ? "hidden" : "")}
+                  onDelete={handleDeleteTag}
                 >
                   {tagFilter}
-                  <X
-                    size={16}
-                    strokeWidth={3}
-                    className="cursor-pointer hover:opacity-80"
-                    onClick={() => setTagFilter("")}
-                  />
-                </span>
+                </Tag>
               </div>
               <div className="flex flex-row items-center gap-4">
                 <span className="font-semibold text-sm text-black whitespace-nowrap">

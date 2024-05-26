@@ -1,15 +1,15 @@
 package com.example.livestreaming.controller;
 
 import com.example.livestreaming.entity.User;
+import com.example.livestreaming.payload.ChannelDTO;
+import com.example.livestreaming.payload.CheckStreamKeyDTO;
+import com.example.livestreaming.payload.UpdatePasswordDTO;
 import com.example.livestreaming.payload.UserDTO;
 import com.example.livestreaming.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,5 +37,24 @@ public class UserController {
     public ResponseEntity<String> sayHelloFromServer () {
         return ResponseEntity.ok("Hello from server");
     }
-
+    @PostMapping("/check-stream-key")
+    public ResponseEntity<Boolean> checkStreamKey (@RequestBody CheckStreamKeyDTO checkStreamKeyDTO) {
+        return ResponseEntity.ok(userService.checkStreamKey(checkStreamKeyDTO.getStreamKey()));
+    }
+    @PutMapping("/stream-key")
+    public ResponseEntity<String> resetStreamKey () {
+        return ResponseEntity.ok(userService.generateStreamKey());
+    }
+    @PutMapping("/update-profile")
+    public ResponseEntity<UserDTO> updateProfile (@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateProfile(userDTO));
+    }
+    @PutMapping("/update-password")
+    public ResponseEntity<String> updatePassword (@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        return ResponseEntity.ok(userService.updatePassword(updatePasswordDTO.getOldPassword(), updatePasswordDTO.getNewPassword()));
+    }
+    @PutMapping("/update-channel")
+    public ResponseEntity<ChannelDTO> updateChannel (@RequestBody ChannelDTO channelDTO) {
+        return ResponseEntity.ok(userService.updateChannel(channelDTO));
+    }
 }

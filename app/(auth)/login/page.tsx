@@ -1,9 +1,9 @@
 "use client";
 
-import { showErrorToast, showSuccessToast } from "@/components/toast";
-import { TextButton } from "@/components/buttons";
-import { LoadingIcon } from "@/components/icons";
-import { Input } from "@/components/input";
+import { showErrorToast, showSuccessToast } from "@/components/ui/toast";
+import { TextButton } from "@/components/ui/buttons";
+import { LoadingIcon } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
 import AuthService from "@/services/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";

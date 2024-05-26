@@ -1,6 +1,7 @@
 package com.example.livestreaming.service;
 
 import com.example.livestreaming.entity.User;
+import com.example.livestreaming.payload.ChannelDTO;
 import com.example.livestreaming.payload.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -10,4 +11,9 @@ public interface UserService {
     public List<String> getToken (Integer id);
     public UserDTO getUser();
     public User getAuthorizedUser();
+    public Boolean checkStreamKey (String streamKey);
+    public String generateStreamKey ();
+    public UserDTO updateProfile(UserDTO userDTO);
+    public String updatePassword(String oldPassword, String newPassword);
+    public ChannelDTO updateChannel(ChannelDTO channelDTO);
 }

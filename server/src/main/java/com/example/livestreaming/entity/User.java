@@ -23,6 +23,8 @@ public class User implements UserDetails {
     private Integer id;
     @Column(nullable = false, unique = true)
     private String username;
+    @Column(columnDefinition = "LONGTEXT")
+    private String bio;
     private String birth;
     @Column(nullable = false, unique = true)
     private String email;
@@ -32,6 +34,10 @@ public class User implements UserDetails {
 
     @OneToMany (mappedBy = "user", fetch = FetchType.EAGER)
     private List<Token> token;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "channel_id", referencedColumnName = "id")
+    private Channel channel;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

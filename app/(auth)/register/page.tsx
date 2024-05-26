@@ -4,10 +4,10 @@ import {
   showDefaultToast,
   showErrorToast,
   showSuccessToast,
-} from "@/components/toast";
-import { IconButton, TextButton } from "@/components/buttons";
-import { LoadingIcon } from "@/components/icons";
-import { Input } from "@/components/input";
+} from "@/components/ui/toast";
+import { IconButton, TextButton } from "@/components/ui/buttons";
+import { LoadingIcon } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
 import AuthService from "@/services/authService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftFromLine } from "lucide-react";
@@ -77,6 +77,7 @@ export default function RegisterPage() {
         <div className="relative w-[500px] bg-white rounded-md shadow-[0_0_45px_-15px_rgba(0,0,0,0.3)] px-6 py-10 flex flex-col">
           <IconButton
             className="absolute top-2 left-2"
+            type="button"
             icon={<ArrowLeftFromLine size={18} />}
             onClick={() => router.push("/login")}
           />

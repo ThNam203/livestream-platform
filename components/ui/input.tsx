@@ -11,13 +11,35 @@ export interface InputProps
   errorMessages?: string;
   iconBefore?: ReactNode;
   iconAfter?: ReactNode;
+  showPasswordButton?: boolean;
+}
+
+export interface TextAreaProps
+  extends React.InputHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  errorMessages?: string;
+  iconBefore?: ReactNode;
+  iconAfter?: ReactNode;
+  hasMaxLength?: boolean;
+  maxLength?: number;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, name, id, placeholder, label, errorMessages, ...props },
+    {
+      className,
+      type,
+      name,
+      id,
+      placeholder,
+      label,
+      errorMessages,
+      showPasswordButton,
+      ...props
+    },
     ref
   ) => {
+    const [showPassword, setShowPassword] = useState(false);
     return (
       <div className="relative flex flex-col">
         <label
@@ -32,11 +54,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={id}
-          type={type}
+          type={showPassword ? "text" : type}
           name={name}
           placeholder={placeholder}
           className={cn(
-            "border-0 outline outline-1 outline-black rounded py-1 px-3 focus:outline-4 focus:outline-primary font-normal",
+            "border-0 outline outline-1 outline-gray-400 rounded py-1 px-3 focus:outline-4 focus:outline-primary hover:outline-gray-500 hover:outline-2 font-normal",
             errorMessages ? "outline-red-500" : "",
             className
           )}
@@ -45,6 +67,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <span className="absolute -bottom-5 text-red-500 text-xs">
           {errorMessages ? errorMessages : ""}
         </span>
+        <div
+          className={cn(
+            "absolute top-[110%] text-primary text-sm hover:underline hover:text-secondary cursor-pointer",
+            showPasswordButton ? "" : "hidden"
+          )}
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? "Hide" : "Show"}
+        </div>
       </div>
     );
   }
@@ -146,4 +177,70 @@ const SearchInput = ({
   );
 };
 
-export { Input, InputWithIcon, SearchInput };
+const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  (
+    {
+      className,
+      name,
+      id,
+      placeholder,
+      label,
+      errorMessages,
+      maxLength,
+      onChange,
+      hasMaxLength,
+      value,
+      ...props
+    },
+    ref
+  ) => {
+    const [length, setLength] = useState(0);
+    useEffect(() => {
+      if (value && typeof value === "string") setLength(value.length);
+      console.log("value textarea", value);
+    }, [value]);
+    return (
+      <div className="relative flex flex-col mb-2">
+        <label
+          htmlFor={id}
+          className={cn(
+            "font-semibold cursor-pointer mb-2",
+            label ? "" : "hidden"
+          )}
+        >
+          {label}
+        </label>
+        <textarea
+          ref={ref}
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          onChange={(e) => {
+            setLength(e.target.value.length);
+            if (onChange) onChange(e);
+          }}
+          className={cn(
+            "border-0 outline outline-1 outline-gray-400 rounded py-1 px-3 focus:outline-4 focus:outline-primary hover:outline-gray-500 hover:outline-2 font-normal",
+            errorMessages ? "outline-red-500" : "",
+            className
+          )}
+          {...props}
+        />
+        <span className="absolute -bottom-5 text-red-500 text-xs">
+          {errorMessages ? errorMessages : ""}
+        </span>
+        <span
+          className={cn(
+            "absolute -bottom-5 right-1 text-xs",
+            hasMaxLength ? "" : "hidden"
+          )}
+        >
+          {`${length}/${maxLength}`}
+        </span>
+      </div>
+    );
+  }
+);
+TextArea.displayName = "TextArea";
+
+export { Input, InputWithIcon, SearchInput, TextArea };

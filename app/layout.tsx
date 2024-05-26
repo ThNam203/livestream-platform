@@ -1,4 +1,4 @@
-import { Toast } from "@/components/toast";
+import { Toast } from "@/components/ui/toast";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";

@@ -4,15 +4,15 @@ import {
   IconButton,
   RoundedImageButton,
   TagButton,
-} from "@/components/buttons";
-import { Hover3DBox } from "@/components/hover_3d_box";
+} from "@/components/ui/buttons";
+import { Hover3DBox } from "@/components/ui/hover_3d_box";
 import { Streaming } from "@/entities/channel";
 import { users } from "@/fakedata/leftbar";
 import { cn } from "@/utils/cn";
 import { ClassValue } from "clsx";
 import { MoreVertical } from "lucide-react";
 import { ReactNode } from "react";
-import streaming_img from "../public/images/live_user_zackrawrr-440x248.jpg";
+import streaming_img from "../../public/images/live_user_zackrawrr-440x248.jpg";
 import { socket_chat } from "@/socket_chat";
 import { useRouter } from "next/navigation";
 import { setCookie } from "cookies-next";

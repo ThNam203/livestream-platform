@@ -1,4 +1,4 @@
-import { IconButton } from "@/components/buttons";
+import { IconButton } from "@/components/ui/buttons";
 import { ArrowRightFromLine, Users } from "lucide-react";
 
 //Lỡ làm lười xóa

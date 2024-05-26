@@ -12,8 +12,11 @@ const profileSlice = createSlice({
     setProfile(state, action: PayloadAction<User>) {
       state.user = action.payload;
     },
+    updateStreamKey(state, action: PayloadAction<string>) {
+      state.user!.channel.streamKey = action.payload;
+    },
   },
 });
 
-export const { setProfile } = profileSlice.actions;
+export const { setProfile, updateStreamKey } = profileSlice.actions;
 export default profileSlice.reducer;

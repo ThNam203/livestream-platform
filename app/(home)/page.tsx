@@ -1,8 +1,8 @@
 "use client";
 
-import { CustomLink } from "@/components/hover_3d_box";
-import { RecommendStreamingView } from "@/components/recommend_streaming_view";
-import { Separate } from "@/components/separate";
+import { CustomLink } from "@/components/ui/hover_3d_box";
+import { RecommendStreamingView } from "@/components/ui/recommend_streaming_view";
+import { Separate } from "@/components/ui/separate";
 import { streamings } from "@/fakedata/leftbar";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
