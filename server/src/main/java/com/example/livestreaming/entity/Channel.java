@@ -24,6 +24,8 @@ public class Channel {
     private String channelName;
     private String title;
     private List<String> tags;
+    private boolean isLiveStreaming;
+    private boolean enableLLHLS;
 
     @OneToOne(mappedBy = "channel")
     private User user;

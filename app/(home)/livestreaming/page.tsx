@@ -55,8 +55,8 @@ export default function Livestreaming() {
     const fetchData = async () => {
       await UserService.getInfo()
         .then((res) => {
-          setProfile(res.data);
-          setThisUser(res.data);
+          setProfile(res);
+          setThisUser(res);
         })
         .catch((err) => showErrorToast(err));
     };
@@ -206,7 +206,7 @@ export default function Livestreaming() {
     streamer: {
       name: "Streamer",
     },
-    videoUrl: "https://www.youtube.com/watch?v=v8_72ciDOhc",
+    videoUrl: "http://192.168.137.68:8080/output_stream0/index.m3u8",
   };
 
   const getTimeBaseOnVideo = (timeUserChat: Date, timeVideoStart: Date) => {
@@ -238,7 +238,7 @@ export default function Livestreaming() {
 
   return (
     <div className="w-full h-full overflow-hidden flex lg:flex-row max-lg:flex-col">
-      <div className="w-full h-[40vw] max-lg:shrink-0">
+      <div className="w-full h-[36vw] max-lg:shrink-0">
         <StreamingFrame
           videoInfo={videoInfo}
           onVideoStart={() => {

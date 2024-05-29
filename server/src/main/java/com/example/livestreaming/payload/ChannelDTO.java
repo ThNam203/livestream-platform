@@ -18,4 +18,6 @@ public class ChannelDTO {
     private String channelName;
     private String title;
     private List<String> tags;
+    private boolean isLiveStreaming;
+    private boolean enableLLHLS;
 }

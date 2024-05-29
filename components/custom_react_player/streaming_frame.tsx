@@ -326,7 +326,7 @@ function VideoControl({
   return (
     <div
       className={cn(
-        "w-11/12 h-fit pb-4 bg-transparent flex flex-col items-center justify-center",
+        "w-full px-10 bg-black/60 pt-4 h-fit pb-4 flex flex-col items-center justify-center",
         className
       )}
     >
@@ -372,7 +372,7 @@ function VideoTracking({
   return (
     <div
       className={cn(
-        "w-full bg-transparent flex items-center justify-center",
+        "w-full bg-transparent flex items-center justify-center hidden",
         className
       )}
     >
@@ -435,13 +435,17 @@ function VideoControlButtons({
           )}
         </div>
         <VolumeButton onVolumeChange={fnControl.handleVolumeChange} />
-        <span className="text-white">
+        {/* <span className="text-white">
           {formatTime(currentTime)} / {formatTime(duration)}
-        </span>
+        </span> */}
+        <div className="text-red-600 font-semibold">
+          <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+          Live
+        </div>
       </div>
 
       <div className="flex flex-row items-center gap-4">
-        <Combobox
+        {/* <Combobox
           options={Object.keys(playbackRates)}
           value={config.playbackRate + "x"}
           onChange={(value: string) =>
@@ -449,7 +453,7 @@ function VideoControlButtons({
               playbackRates[value as keyof typeof playbackRates]
             )
           }
-        />
+        /> */}
 
         <Combobox
           options={resolutions.map((res) =>

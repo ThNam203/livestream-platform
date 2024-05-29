@@ -1,5 +1,3 @@
-import { User } from "./user";
-
 export type Streaming = {
   id: any;
   ownerId: any;
@@ -13,10 +11,9 @@ export type Streaming = {
 
 export type Channel = {
   id: number;
-  ownerId: number;
-  description: string;
+  title: string;
+  channelName: string;
   tags: string[];
-  category: string;
-  views: number;
-  // livestreamsHosted
+  streamKey: string;
+  enableLLHLS: boolean;
 };

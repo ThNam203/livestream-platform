@@ -1,5 +1,6 @@
 import { UserToReceive } from "@/converter/userConverter";
 import AxiosService from "./axiosService";
+import { UpdateChannelFormData } from "@/app/(home)/setting/page";
 
 const getInfo = () => {
   return AxiosService.get("/user/info", { withCredentials: true }).then(
@@ -49,15 +50,26 @@ const updatePassword = (data: UpdatePasswordProps) => {
   });
 };
 
-export interface UpdateChannelProps {
-  title: string;
-  channelName: string;
-  tags: string[];
-}
-const updateChannel = (data: UpdateChannelProps) => {
+const updateChannel = (data: UpdateChannelFormData) => {
   return AxiosService.put("/user/update-channel", data, {
     withCredentials: true,
   });
+};
+
+const startLiveStream = () => {
+  return AxiosService.post(
+    "/user/start-live-stream",
+    {},
+    { withCredentials: true }
+  ).then((res) => UserToReceive(res.data));
+};
+
+const stopLiveStream = () => {
+  return AxiosService.post(
+    "/user/stop-live-stream",
+    {},
+    { withCredentials: true }
+  ).then((res) => UserToReceive(res.data));
 };
 
 const UserService = {
@@ -67,6 +79,8 @@ const UserService = {
   updateProfile,
   updatePassword,
   updateChannel,
+  startLiveStream,
+  stopLiveStream,
 };
 
 export default UserService;

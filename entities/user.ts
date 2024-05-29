@@ -1,3 +1,5 @@
+import { Channel } from "./channel";
+
 export type User = {
   id: number;
   username: string;
@@ -8,13 +10,6 @@ export type User = {
   password: string;
   birth: Date;
   channel: Channel;
-};
-export type Channel = {
-  id: number;
-  title: string;
-  channelName: string;
-  tags: string[];
-  streamKey: string;
 };
 
 //some props will develop later

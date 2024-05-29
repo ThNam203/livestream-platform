@@ -13,6 +13,8 @@ public class ChannelMapper {
                 .channelName(channel.getChannelName())
                 .title(channel.getTitle())
                 .tags(channel.getTags())
+                .isLiveStreaming(channel.isLiveStreaming())
+                .enableLLHLS(channel.isEnableLLHLS())
                 .build();
     }
 
@@ -23,6 +25,8 @@ public class ChannelMapper {
                 .channelName(channelDTO.getChannelName())
                 .title(channelDTO.getTitle())
                 .tags(channelDTO.getTags())
+                .isLiveStreaming(channelDTO.isLiveStreaming())
+                .enableLLHLS(channelDTO.isEnableLLHLS())
                 .build();
     }
 

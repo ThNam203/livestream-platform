@@ -14,18 +14,15 @@ import {
 import { User } from "@/entities/user";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setProfile, updateStreamKey } from "@/redux/slices/profile";
-import UserService, {
-  UpdateChannelProps,
-  UpdateProfileProps,
-} from "@/services/userService";
+import UserService, { UpdateProfileProps } from "@/services/userService";
 import { cn } from "@/utils/cn";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ClassValue } from "clsx";
 import { format } from "date-fns";
-import { channel } from "diagnostics_channel";
 import { ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ZodType, z } from "zod";
+import { Radio, RadioGroup } from "@nextui-org/react";
 
 export type UpdateProfileFormData = {
   username: string;
@@ -40,6 +37,7 @@ export type UpdateChannelFormData = {
   channelName: string;
   title: string;
   tags: string[];
+  enableLLHLS: boolean;
 };
 
 const updateProfileSchema: ZodType<UpdateProfileFormData> = z
@@ -75,6 +73,7 @@ const updateChannelSchema: ZodType<UpdateChannelFormData> = z.object({
     .min(1, { message: "Channel name must be at least 1 character" }),
   title: z.string().max(140),
   tags: z.array(z.string().min(1)),
+  enableLLHLS: z.boolean(),
 });
 
 export default function SettingPage() {
@@ -125,6 +124,7 @@ export default function SettingPage() {
       channelName: "",
       title: "",
       tags: [],
+      enableLLHLS: true,
     },
   });
   const {
@@ -158,12 +158,7 @@ export default function SettingPage() {
   };
 
   const handleUpdateChannel = (data: UpdateChannelFormData) => {
-    const channelToUpdate: UpdateChannelProps = {
-      channelName: data.channelName,
-      title: data.title,
-      tags: data.tags,
-    };
-    UserService.updateChannel(channelToUpdate)
+    UserService.updateChannel(data)
       .then(() => showSuccessToast("Channel updated successfully"))
       .catch((err) => showErrorToast(err));
   };
@@ -191,6 +186,7 @@ export default function SettingPage() {
       updateChannelForm.setValue("channelName", thisUser.channel.channelName);
       updateChannelForm.setValue("title", thisUser.channel.title);
       updateChannelForm.setValue("tags", thisUser.channel.tags);
+      updateChannelForm.setValue("enableLLHLS", thisUser.channel.enableLLHLS);
     }
   };
 
@@ -201,12 +197,6 @@ export default function SettingPage() {
           dispatch(setProfile(res));
         })
         .catch((err) => showErrorToast(err));
-
-      await UserService.checkStreamKey(
-        "live_1716640896_JTaZf04YNLhFwaGPh6Jf"
-      ).then((res) => {
-        console.log(res);
-      });
     };
 
     if (!thisUser) fetchData();
@@ -246,7 +236,7 @@ export default function SettingPage() {
             <div className="w-full flex flex-col font-sans text-primaryWord gap-4">
               <h1 className="font-semibold text-xl">Profile info</h1>
               <div className="max-w-4xl border border-gray-200 bg-white rounded-md">
-                <div className="w-full flex flex-row items-center justify-center gap-10 py-2">
+                <div className="w-full flex flex-row items-center justify-center sm:gap-10 max-sm:gap-2 py-2 px-2">
                   <ChooseAvatarButton
                     fileUrl={avatarUrl}
                     onImageChanged={handleAvatarChanged}
@@ -433,15 +423,15 @@ export default function SettingPage() {
             className="flex flex-col gap-6"
           >
             <div className="w-full flex flex-col font-sans text-primaryWord gap-4">
-              <h1 className="font-semibold text-xl">Stream key</h1>
+              <h1 className="font-semibold text-xl">Stream config</h1>
               <Border>
-                <RowInfo title="Private stream key" className="h-20">
+                <RowInfo title="Private stream key" className="pb-8">
                   <div className="flex flex-row w-full gap-2">
                     <div className="relative flex-1">
                       <Input
                         type="password"
                         value={thisUser ? thisUser.channel.streamKey : ""}
-                        onChange={(e) => {
+                        onChange={() => {
                           return;
                         }}
                         showPasswordButton={true}
@@ -465,6 +455,34 @@ export default function SettingPage() {
                     >
                       Reset
                     </TextButton>
+                  </div>
+                </RowInfo>
+                <Separate />
+                <RowInfo title="Latency mode">
+                  <div className="h-fit flex-1">
+                    <RadioGroup
+                      color="primary"
+                      value={
+                        watchChannel("enableLLHLS") === false
+                          ? "ll-hls-none"
+                          : "ll-hls"
+                      }
+                      onValueChange={(value) => {
+                        updateChannelForm.setValue(
+                          "enableLLHLS",
+                          value === "ll-hls"
+                        );
+                      }}
+                    >
+                      <Radio value="ll-hls">
+                        Low latency: Best for near real-time interactions with
+                        viewers
+                      </Radio>
+                      <Radio value="ll-hls-none">
+                        Normal latency: Enable this setting if you do not
+                        interact with viewers in real-time
+                      </Radio>
+                    </RadioGroup>
                   </div>
                 </RowInfo>
               </Border>
@@ -569,7 +587,7 @@ export default function SettingPage() {
 
 const Border = ({ children }: { children?: ReactNode[] | ReactNode }) => {
   return (
-    <div className="max-w-4xl border border-gray-200 bg-white rounded-md">
+    <div className="max-w-4xl border border-gray-200 bg-transparent rounded-md max-sm:w-[80vw]">
       {children}
     </div>
   );
@@ -594,7 +612,8 @@ const RowInfo = ({
       >
         {title}
       </span>
-      <div className="h-full flex-1">{children}</div>
+
+      <div className="h-fit flex-1">{children}</div>
     </div>
   );
 };

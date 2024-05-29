@@ -50,24 +50,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean checkStreamKey(String streamKey) {
-        return channelRepository.findByStreamKey(streamKey).isPresent();
-    }
-
-    @Override
-    public String generateStreamKey() {
-        String newStreamKey = keyGenerationService.generateStreamKey();
-
-        //Update the stream key in the database
-        var user = getAuthorizedUser();
-        var updatedChannel = user.getChannel();
-        updatedChannel.setStreamKey(newStreamKey);
-        user.setChannel(updatedChannel);
-        userRepository.save(user);
-        return user.getChannel().getStreamKey();
-    }
-
-    @Override
     public UserDTO updateProfile(UserDTO userDTO) {
         var user = getAuthorizedUser();
         user.setBio(userDTO.getBio());
@@ -86,16 +68,5 @@ public class UserServiceImpl implements UserService {
             return "Password updated successfully";
         }
         throw new RuntimeException("Password is incorrect");
-    }
-    @Override
-    public ChannelDTO updateChannel(ChannelDTO channelDTO) {
-        var user = getAuthorizedUser();
-        var channel = user.getChannel();
-        channel.setTitle(channelDTO.getTitle());
-        channel.setChannelName(channelDTO.getChannelName());
-        channel.setTags(channelDTO.getTags());
-        user.setChannel(channel);
-        userRepository.save(user);
-        return channelDTO;
     }
 }
